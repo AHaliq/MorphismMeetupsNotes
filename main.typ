@@ -25,9 +25,7 @@
 
 // end of preamble -------------------------
 
-= Universal Properties and Yoneda Lemma(#datetime(year: 2025, month: 10, day:10).display())
-
-#align(center)[#smallcaps("Pre-Requisite") 1: @riehl2017category Chapter 1 and 2]
+= Pre-Requisite: @riehl2017category Chapter 1
 
 #definition(name: "Category")[A #emph("category") $cal(C)$ consists of #emph("objects") $X, Y, Z, ... in cal(C)$ and #emph("morphisms") $f, g, h, ... in cal(C)(X,Y)$ where $X in cal(C)$ is its #emph("domain") and $Y in cal(C)$ is its #emph("codomain").
 
@@ -257,10 +255,10 @@ caption: [Commutative Diagram for each property of a category]
   )
 ]
 
-#theorem(name: "Mono-Epi Dual Theorem")[A monomorphism is an epimorphism in its oppposite category and vice versa.
+#theorem(name: "Mono-Epi Dual Theorem")[A monomorphism is an epimorphism in its opposite category and vice versa.
   $
-    forall cal(C). &text("IsMono")(f: cal(C)(X,Y)) => text("IsEpi")(f^op: cal(C)^op (Y,X)) \
-    &and text("IsEpi")(f: cal(C)(X,Y)) => text("IsMono")(f^op: cal(C)^op (Y,X))
+    forall cal(C). text("IsMono")(f: cal(C)(X,Y)) => text("IsEpi")(f^op: cal(C)^op (Y,X)) \
+    forall cal(C). text("IsEpi")(f: cal(C)(X,Y)) => text("IsMono")(f^op: cal(C)^op (Y,X))
   $
 ]
 
@@ -273,7 +271,8 @@ TODO
 - contravariant functor
 - naturality... onwards
 
-#align(center)[#smallcaps("Meeting Notes")]
+= Meeting 1: @riehl2017category Chapter 2 (#datetime(year: 2025, month: 10, day:10).display())
+
 1. Universal Properties
 2. Representable Functors
 3. Yoneda Lemma

@@ -14,5 +14,5 @@ https://discord.gg/ezddt97f
 2. Clone this repository
 3. Compile `main.typ`:
 ```bash
-typst compile main.typ
+typst compile src/main.typ
 ```

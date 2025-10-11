@@ -1,5 +1,11 @@
+#import "@preview/equate:0.3.2": equate
 #import "@preview/lemmify:0.1.8": *
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
+
+// equate ----------------------------------
+
+#show: equate.with(breakable: true, sub-numbering: true)
+#set math.equation(numbering: "(1.1)")
 
 // lemmify ---------------------------------
 #let (
@@ -27,14 +33,10 @@
 
   $
     text("IsCat")(cal(C))
-    &= forall X grayed(in cal(C)). 1_X grayed(in cal(C)(X,X))
-    & text("identity") \
-    &and forall f grayed(in cal(C)(X,Y)), g grayed(in cal(C)(Y,Z)). g f grayed(in cal(C)(X,Z))
-    & text("composition") \
-    &and forall f grayed(in cal(C)(X,Y)). 1_Y f = f = f 1_X
-    & text("unital") \
-    &and forall f grayed(in cal(C)(X,Y)), g grayed(in cal(C)(Y,Z)), h grayed(in cal(C)(Z,W)). h (g f) = (h g) f
-    & text("associative")
+    &= forall X grayed(in cal(C)). 1_X grayed(in cal(C)(X,X)) & text("Identity") #<identity> \
+    &and forall f grayed(in cal(C)(X,Y)), g grayed(in cal(C)(Y,Z)). g f grayed(in cal(C)(X,Z)) & text("Composition") #<composition> \
+    &and forall f grayed(in cal(C)(X,Y)). 1_Y f = f = f 1_X & text("Unital") #<unital> \
+    &and forall f grayed(in cal(C)(X,Y)), g grayed(in cal(C)(Y,Z)), h grayed(in cal(C)(Z,W)). h (g f) = (h g) f & text("Associative") #<associative>
   $
 
   #figure(
@@ -106,7 +108,7 @@
       $f in cal(C)(X,Y)$, $f: X -> Y$, $X attach(->, t: f) Y$,
     ),
   )
-]
+] <category>
 
 #let Mor = $text("Mor")$;
 #let Set = $text("Set")$;
@@ -115,20 +117,20 @@
   $
     Mor cal(C) in Set
   $
-]
+] <small>
 
 #definition(name: "Locally Small Category")[A category where its homs are a set's worth
   $
     cal(C)(X,Y) in Set
   $
-]
+] <locallysmall>
 
 #let iso = math.tilde.equiv;
 
 #definition(name: "Isomorphism")[A morphism in a category that has an #emph("inverse")
   $
     text("Iso")(f grayed(in cal(C)(X,Y))) & = exists g grayed(in cal(C)(Y,X)). g f = 1_X and f g = 1_Y \
-                                    X iso Y & = exists f grayed(in cal(C)(X,Y)). text("Iso")(f)
+                                  X iso Y & = exists f grayed(in cal(C)(X,Y)). text("Iso")(f)
   $
 
   #figure(
@@ -146,7 +148,7 @@
       }),
     ),
   )
-]
+] <isomorphism>
 
 #definition(name: "Endomorphism")[A morphism whose domain and codomain are the same
   $
@@ -163,7 +165,7 @@
       }),
     ),
   )
-]
+] <endomorphism>
 
 #definition(name: "Automorphism")[An isomorphism thats also an endomorphism
   $
@@ -182,20 +184,20 @@
       }),
     ),
   )
-]
+] <automorphism>
 
 #definition(name: "Subcategory")[A subset of objects and morphisms of a category that is also a category
   $
     cal(D) subset.eq cal(C) & => text("IsCat")(cal(D))
   $
-]
+] <subcategory>
 
 #definition(name: "Opposite Category")[The category with all morphisms domain and codomain swapped
   $
     cal(C)^op & => forall X in cal(C). X in cal(C)^op                                &       text("same objects") \
               & and forall f grayed(in cal(C)(X,Y)). f^op grayed(in cal(C)^op (Y,X)) & text("reversed morphisms")
   $
-]
+] <oppositecategory>
 
 #theorem(
   name: "Dual Theorem",
@@ -203,7 +205,7 @@
   $
     (grayed(forall cal(C).) P(cal(C))) <=> (grayed(forall cal(C).) P(cal(C)^op))
   $
-]
+] <dualtheorem>
 
 #definition(
   name: "Monomorphism",
@@ -211,6 +213,7 @@
   $
     text("Monic")(f grayed(in cal(C)(X,Y))) = forall h,k grayed(in cal(C)(Z,X)). f h = f k => h = k
   $
+
   #figure(
     table(
       stroke: 0.5pt,
@@ -228,12 +231,13 @@
       }),
     ),
   )
+] <monomorphism>
+
+#theorem(name: "Mono Injective Hom")[If $X attach(>->, t: f) Y$ is monic, there is an injective map $f_*$ of morphisms from any $Z$ to $X$ to morphisms from $Z$ to $Y$ i.e. if $f_*(h) = g$ and $f_*(k) = g$ then $h = k$ where $f h$ and $f k$ is a candidate for $g$.
+
   $
     text("Monic")(f grayed(in cal(C)(X,Y))) => exists f_* : cal(C)(Z,X) arrow.hook cal(C)(Z,Y).
   $
-  #align(
-    center,
-  )[If $X attach(>->, t: f) Y$ is monic, there is an injective map $f_*$ of morphisms from any $Z$ to $X$ to morphisms from $Z$ to $Y$ i.e. if $f_*(h) = g$ and $f_*(k) = g$ then $h = k$ e.g. $g = f h = f k$]
 ]
 
 #definition(
@@ -260,12 +264,13 @@
       }),
     ),
   )
+] <epimorphism>
+
+#theorem(name: "Epi Injective Hom")[If $Y attach(->>, t: f) X$ is epic, there is an injective map $f^*$ of morphisms from $X$ to any $Z$ to morphisms from $Y$ to $Z$ i.e. if $f^*(h) = g$ and $f^*(k) = g$ then $h = k$ where $h f$ and $k f$ is a candidate for $g$.
+
   $
     text("Epic")(f grayed(in cal(C)(Y,X))) => exists f^* : cal(C)(X,Z) arrow.hook cal(C)(Y,Z).
   $
-  #align(
-    center,
-  )[If $Y attach(->>, t: f) X$ is epic, there is an injective map $f^*$ of morphisms from $X$ to any $Z$ to morphisms from $Y$ to $Z$ i.e. if $f^*(h) = g$ and $f^*(k) = g$ then $h = k$ e.g. $g = h f = k f$]
 ]
 
 #theorem(name: "Mono-Epi Dual Theorem")[A monomorphism is an epimorphism in its opposite category and vice versa.
@@ -296,7 +301,7 @@
       }),
     ),
   )
-]
+] <section>
 
 #theorem(
   name: "Sections are Monic, Retractions are Epic",
@@ -305,55 +310,63 @@
     text("Section")(s,r) => text("Monic")(s) and text("Epic")(r)
   $
   #figure(
-  table(
-    stroke: 0.5pt,
-    diagram({
-      let X = (1, 0)
-      let Y = (2, 0)
-      let W = (0, -1)
-      let Z = (0, 1)
-      node(X, $X$)
-      node(Y, $Y$)
-      node(W, $W$)
-      node(Z, $Z$)
-      edge(X, ">->", Y, bend: 30deg)[$s$]
-      edge(Y, "->>", X, bend: 30deg)[$r$]
-      edge(X, "->", X, bend: -130deg, loop-angle: 90deg)[$1_X=r s$]
-      edge(W, "->", X, bend: 0deg, label-side: center)[$h$]
-      edge(W, "->", X, bend: -30deg, label-side: center)[$k$]
-      edge(X, "->", Z, bend: -30deg, label-side: center)[$i$]
-      edge(X, "->", Z, bend: 0deg, label-side: center)[$j$]
-      edge(W, "->", Y, bend: 40deg)[$s h = s k$]
-      edge(Y, "->", Z, bend: 40deg)[$i r = j r$]
-    }),
-  ),
-)
+    table(
+      stroke: 0.5pt,
+      diagram({
+        let X = (1, 0)
+        let Y = (2, 0)
+        let W = (0, -1)
+        let Z = (0, 1)
+        node(X, $X$)
+        node(Y, $Y$)
+        node(W, $W$)
+        node(Z, $Z$)
+        edge(X, ">->", Y, bend: 30deg)[$s$]
+        edge(Y, "->>", X, bend: 30deg)[$r$]
+        edge(X, "->", X, bend: -130deg, loop-angle: 90deg)[$1_X=r s$]
+        edge(W, "->", X, bend: 0deg, label-side: center)[$h$]
+        edge(W, "->", X, bend: -30deg, label-side: center)[$k$]
+        edge(X, "->", Z, bend: -30deg, label-side: center)[$i$]
+        edge(X, "->", Z, bend: 0deg, label-side: center)[$j$]
+        edge(W, "->", Y, bend: 40deg)[$s h = s k$]
+        edge(Y, "->", Z, bend: 40deg)[$i r = j r$]
+      }),
+    ),
+  )
 ]
 #proof(
   name: "Sections are Monic",
-)[Let $s in cal(C)(X,Y)$ be a section to $r in cal(C)(Y,X)$ such that $r s = 1_X$. We show that $s$ is monic. Suppose that $s h = s k$ we show that $h = k$. Composing with $r$ we get that $r s h = r s k$ and so $1_X h = 1_X k$. By the unital property of identity morphisms, $1_X h = h$ and likewise $1_X k = k$. Thus, $h = k$ concluding that $s$ is monic.
+)[
   $
-      & text("Section")(s,r) => text("Monic")(s) \
-    = & (r s = 1_X) => (forall h, k. s h = s k => h = k)     & text("by definition") \
-    = & r s = 1_X => forall h, k. s h = s k => 1_X h = 1_X k &     text("by unital") \
-    = & r s = 1_X => forall h, k. s h = s k => r s h = r s k &    text("by section") \
-    = & r s = 1_X => forall h, k. top & text("by composition") \
-    = & r s = 1_X => top \
-    = & top
+    text("Section")(s,r) => text("Monic")(s)
+  $
+  Let $s in cal(C)(X,Y)$ be a section to $r in cal(C)(Y,X)$ such that $r s = 1_X$. We show that $s$ is monic. Suppose that $s h = s k$ we show that $h = k$. Composing with $r$ we get that $r s h = r s k$ and so $1_X h = 1_X k$. By the unital property of identity morphisms, $1_X h = h$ and likewise $1_X k = k$. Thus, $h = k$ concluding that $s$ is monic.
+  $
+    text("Section")(s,r) = & (r s = 1_X)                                          &      #ref(<section>) \
+        text("Monic")(s) = & (forall h, k. s h = s k => h = k)                    & #ref(<monomorphism>) \
+                         = & r s = 1_X => forall h, k. s h = s k => 1_X h = 1_X k &       #ref(<unital>) \
+                         = & r s = 1_X => forall h, k. s h = s k => r s h = r s k &                      \
+                         = & r s = 1_X => forall h, k. top                        &  #ref(<composition>) \
+                         = & r s = 1_X => top \
+                         = & top
   $
 ]
 
 #proof(
   name: "Retractions are Epic",
-)[Let $r in cal(C)(Y,X)$ be a retraction to $s in cal(C)(X,Y)$ such that $r s = 1_X$. We show that $r$ is epic. Suppose that $i r = j r$ we show that $i = j$. Composing with $s$ we get that $i r s = j r s$ and so $i 1_X = j 1_X$. By the unital property of identity morphisms, $i 1_X = i$ and likewise $j 1_X = j$. Thus, $i = j$ concluding $r$ is epic.
+)[
   $
-      & text("Section")(s,r) => text("Epic")(r) \
-    = & (r s = 1_X) => (forall i, j. i r = j r => i = j)     & text("by definition") \
-    = & r s = 1_X => forall i, j. i r = j r => i 1_X = j 1_X &     text("by unital") \
-    = & r s = 1_X => forall i, j. i r = j r => i r s = j r s & text("by retraction") \
-    = & r s = 1_X => forall i, j. top & text("by composition") \
-    = & r s = 1_X => top \
-    = & top
+    text("Section")(s,r) => text("Epic")(r)
+  $
+  Let $r in cal(C)(Y,X)$ be a retraction to $s in cal(C)(X,Y)$ such that $r s = 1_X$. We show that $r$ is epic. Suppose that $i r = j r$ we show that $i = j$. Composing with $s$ we get that $i r s = j r s$ and so $i 1_X = j 1_X$. By the unital property of identity morphisms, $i 1_X = i$ and likewise $j 1_X = j$. Thus, $i = j$ concluding $r$ is epic.
+  $
+    text("Section")(s,r) = & (r s = 1_X)                                          &     #ref(<section>) \
+         text("Epic")(r) = & (forall i, j. i r = j r => i = j)                    & #ref(<epimorphism>) \
+                         = & r s = 1_X => forall i, j. i r = j r => i 1_X = j 1_X &      #ref(<unital>) \
+                         = & r s = 1_X => forall i, j. i r = j r => i r s = j r s &                     \
+                         = & r s = 1_X => forall i, j. top                        & #ref(<composition>) \
+                         = & r s = 1_X => top \
+                         = & top
   $
 ]
 
@@ -375,26 +388,35 @@
         node(Z, $Z$)
         edge(X, ">->>", Y, bend: 30deg)[$f$]
         edge(Y, ">->>", X, bend: 30deg)[$g$]
-        edge(X, "->", X, bend: -130deg, loop-angle: 90deg)[$1_X=g f$]
+        edge(X, "->", X, bend: -130deg, loop-angle: -90deg)[$1_X=g f$]
         edge(Y, "->", Y, bend: -130deg, loop-angle: 90deg)[$1_Y=f g$]
         edge(W, "->", X, bend: 20deg, label-side: center)[$h$]
         edge(W, "->", X, bend: -20deg, label-side: center)[$k$]
         edge(Y, "->", Z, bend: 20deg, label-side: center)[$i$]
         edge(Y, "->", Z, bend: -20deg, label-side: center)[$j$]
+        edge(W, "->", Y, bend: 80deg)[$f h = f k$]
+        edge(X, "->", Z, bend: -80deg)[$i f = j f$]
       }),
     ),
   )
 ]
 #proof(name: "Isomorphisms are Monic and Epic")[
+  $
+    text("Iso")(f) => text("Monic")(f) and text("Epic")(f)
+  $
   Let $f in cal(C)(X,Y)$ be an isomorphism with the inverse $g in cal(C)(Y,X)$. Thus, $f$ is a section to $g$ when $X$ is the retract since $g f = 1_X$. Moreover, $f$ is a retraction to $g$ when $Y$ is the retract since $f g = 1_Y$. Since sections are monic and retractions are epic, $f$ is both monic and epic.
   $
-  &text("Iso")(f) = (exists g. g f = 1_X and f g = 1_Y) & text("by definition") \
-  &=> text("Monic")(f) and text("Epic")(f) \
-  =&(forall h, k. f h = f k => h = k) and (forall i,j. i f = j f => i = j) & text("by definition") \
-  =&(forall h, k. f h = f k => 1_X h = 1_X k) and (forall i,j. i f = j f => i 1_Y = j 1_Y) & text("by unital") \
-  =&(forall h, k. f h = f k => g f h = g f k) and (forall i,j. i f = j f => i f g = j f g) & text("by isomorphism") \
-  =&(forall h, k. top) and (forall i,j. top) & text("by composition") \
-  =& top
+      text("Iso")(f) = & exists g. g f = 1_X and f g = 1_Y         &  #ref(<isomorphism>) \
+    text("Monic")(f) = & forall h, k. f h = f k => h = k           & #ref(<monomorphism>) \
+                     = & forall h, k. f h = f k => 1_X h = 1_X k   &       #ref(<unital>) \
+                     = & (forall h, k. f h = f k => g f h = g f k) \
+                     = & forall h, k. top                          &  #ref(<composition>) \
+                     = & top \
+     text("Epic")(f) = & forall i,j. i f = j f => i = j            &  #ref(<epimorphism>) \
+                     = & forall i,j. i f = j f => i 1_Y = j 1_Y    &       #ref(<unital>) \
+                     = & forall i,j. i f = j f => i f g = j f g \
+                     = & forall i,j. top                           &  #ref(<composition>) \
+                     = & top
   $
 ]
 

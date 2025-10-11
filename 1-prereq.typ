@@ -233,7 +233,9 @@
   )
 ] <monomorphism>
 
-#theorem(name: "Mono Injective Hom")[If $X attach(>->, t: f) Y$ is monic, there is an injective map $f_*$ of morphisms from any $Z$ to $X$ to morphisms from $Z$ to $Y$ i.e. if $f_*(h) = g$ and $f_*(k) = g$ then $h = k$ where $f h$ and $f k$ is a candidate for $g$.
+#theorem(
+  name: "Mono Injective Hom",
+)[If $X attach(>->, t: f) Y$ is monic, there is an injective map $f_*$ of morphisms from any $Z$ to $X$ to morphisms from $Z$ to $Y$ i.e. if $f_*(h) = g$ and $f_*(k) = g$ then $h = k$ where $f h$ and $f k$ is a candidate for $g$.
 
   $
     text("Monic")(f grayed(in cal(C)(X,Y))) => exists f_* : cal(C)(Z,X) arrow.hook cal(C)(Z,Y).
@@ -266,7 +268,9 @@
   )
 ] <epimorphism>
 
-#theorem(name: "Epi Injective Hom")[If $Y attach(->>, t: f) X$ is epic, there is an injective map $f^*$ of morphisms from $X$ to any $Z$ to morphisms from $Y$ to $Z$ i.e. if $f^*(h) = g$ and $f^*(k) = g$ then $h = k$ where $h f$ and $k f$ is a candidate for $g$.
+#theorem(
+  name: "Epi Injective Hom",
+)[If $Y attach(->>, t: f) X$ is epic, there is an injective map $f^*$ of morphisms from $X$ to any $Z$ to morphisms from $Y$ to $Z$ i.e. if $f^*(h) = g$ and $f^*(k) = g$ then $h = k$ where $h f$ and $k f$ is a candidate for $g$.
 
   $
     text("Epic")(f grayed(in cal(C)(Y,X))) => exists f^* : cal(C)(X,Z) arrow.hook cal(C)(Y,Z).
@@ -334,6 +338,7 @@
     ),
   )
 ]
+
 #proof(
   name: "Sections are Monic",
 )[
@@ -342,15 +347,14 @@
   $
   Let $s in cal(C)(X,Y)$ be a section to $r in cal(C)(Y,X)$ such that $r s = 1_X$. We show that $s$ is monic. Suppose that $s h = s k$ we show that $h = k$. Composing with $r$ we get that $r s h = r s k$ and so $1_X h = 1_X k$. By the unital property of identity morphisms, $1_X h = h$ and likewise $1_X k = k$. Thus, $h = k$ concluding that $s$ is monic.
   $
-    text("Section")(s,r) = & (r s = 1_X)                                          &      #ref(<section>) \
-        text("Monic")(s) = & (forall h, k. s h = s k => h = k)                    & #ref(<monomorphism>) \
-                         = & r s = 1_X => forall h, k. s h = s k => 1_X h = 1_X k &       #ref(<unital>) \
-                         = & r s = 1_X => forall h, k. s h = s k => r s h = r s k &                      \
-                         = & r s = 1_X => forall h, k. top                        &  #ref(<composition>) \
-                         = & r s = 1_X => top \
+    text("Section")(s,r) = & (r s = 1_X)                             &      #ref(<section>) \
+        text("Monic")(s) = & (forall h, k. s h = s k => h = k)       & #ref(<monomorphism>) \
+                         = & forall h, k. s h = s k => 1_X h = 1_X k &       #ref(<unital>) \
+                         = & forall h, k. s h = s k => r s h = r s k &                      \
+                         = & forall h, k. top                        &  #ref(<composition>) \
                          = & top
   $
-]
+] <sections-are-monic>
 
 #proof(
   name: "Retractions are Epic",
@@ -360,15 +364,14 @@
   $
   Let $r in cal(C)(Y,X)$ be a retraction to $s in cal(C)(X,Y)$ such that $r s = 1_X$. We show that $r$ is epic. Suppose that $i r = j r$ we show that $i = j$. Composing with $s$ we get that $i r s = j r s$ and so $i 1_X = j 1_X$. By the unital property of identity morphisms, $i 1_X = i$ and likewise $j 1_X = j$. Thus, $i = j$ concluding $r$ is epic.
   $
-    text("Section")(s,r) = & (r s = 1_X)                                          &     #ref(<section>) \
-         text("Epic")(r) = & (forall i, j. i r = j r => i = j)                    & #ref(<epimorphism>) \
-                         = & r s = 1_X => forall i, j. i r = j r => i 1_X = j 1_X &      #ref(<unital>) \
-                         = & r s = 1_X => forall i, j. i r = j r => i r s = j r s &                     \
-                         = & r s = 1_X => forall i, j. top                        & #ref(<composition>) \
-                         = & r s = 1_X => top \
+    text("Section")(s,r) = & (r s = 1_X)                             &     #ref(<section>) \
+         text("Epic")(r) = & (forall i, j. i r = j r => i = j)       & #ref(<epimorphism>) \
+                         = & forall i, j. i r = j r => i 1_X = j 1_X &      #ref(<unital>) \
+                         = & forall i, j. i r = j r => i r s = j r s &                     \
+                         = & forall i, j. top                        & #ref(<composition>) \
                          = & top
   $
-]
+] <retractions-are-epic>
 
 #theorem(name: "Isomorphisms are Monic and Epic")[
   $
@@ -400,23 +403,16 @@
     ),
   )
 ]
+
 #proof(name: "Isomorphisms are Monic and Epic")[
   $
     text("Iso")(f) => text("Monic")(f) and text("Epic")(f)
   $
   Let $f in cal(C)(X,Y)$ be an isomorphism with the inverse $g in cal(C)(Y,X)$. Thus, $f$ is a section to $g$ when $X$ is the retract since $g f = 1_X$. Moreover, $f$ is a retraction to $g$ when $Y$ is the retract since $f g = 1_Y$. Since sections are monic and retractions are epic, $f$ is both monic and epic.
   $
-      text("Iso")(f) = & exists g. g f = 1_X and f g = 1_Y         &  #ref(<isomorphism>) \
-    text("Monic")(f) = & forall h, k. f h = f k => h = k           & #ref(<monomorphism>) \
-                     = & forall h, k. f h = f k => 1_X h = 1_X k   &       #ref(<unital>) \
-                     = & (forall h, k. f h = f k => g f h = g f k) \
-                     = & forall h, k. top                          &  #ref(<composition>) \
-                     = & top \
-     text("Epic")(f) = & forall i,j. i f = j f => i = j            &  #ref(<epimorphism>) \
-                     = & forall i,j. i f = j f => i 1_Y = j 1_Y    &       #ref(<unital>) \
-                     = & forall i,j. i f = j f => i f g = j f g \
-                     = & forall i,j. top                           &  #ref(<composition>) \
-                     = & top
+      text("Iso")(f) = & (exists g. g f = 1_X and f g = 1_Y)       &  #ref(<isomorphism>) \
+      =& exists g. text("Section")(f,g) and text("Section")(g, f) & #ref(<section>) \
+      =& exists g. text("Monic")(f) and text("Epic")(f)         & #ref(<retractions-are-epic>) \
   $
 ]
 

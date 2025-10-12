@@ -129,7 +129,7 @@
   $
     LocallySmall(cal(C)) & := cal(C)(X,Y) in Set
   $
-] <locallysmall>
+] <locally-small>
 
 #let iso = math.tilde.equiv;
 #let Iso(x) = $text("Iso")(#x)$;
@@ -230,7 +230,7 @@
     dim(forall cal(C).) cal(C)^op => & forall X in cal(C). X in cal(C)^op               &       text("same objects") \
                                  and & forall f in cal(C)(X,Y). f^op in cal(C)^op (Y,X) & text("reversed morphisms")
   $
-] <oppositecategory>
+] <opposite-category>
 
 #theorem(
   name: "Dual Theorem",
@@ -238,7 +238,7 @@
   $
     (dim(forall cal(C).) P(cal(C))) <=> (dim(forall cal(C).) P(cal(C)^op))
   $
-] <dualtheorem>
+] <dual-theorem>
 
 #let Monic(x) = $text("Monic")(#x)$;
 
@@ -260,8 +260,8 @@
         node(Y, $Y$)
         node(Z, $Z$)
         edge(X, ">->", Y)[$f$]
-        edge(Z, "->", X, shift: 5pt)[$h$]
-        edge(Z, "->", X, shift: -5pt, label-sep: -1pt)[$k$]
+        edge(Z, "->", X, bend: 15deg, label-side: center)[$h$]
+        edge(Z, "->", X, bend: -15deg, label-side: center)[$k$]
         edge(Z, "->", Y, bend: -30deg)[$f h = f k$]
       }),
     ),
@@ -297,8 +297,8 @@
         node(Y, $Y$)
         node(Z, $Z$)
         edge(Y, "->>", X)[$f$]
-        edge(X, "->", Z, shift: 5pt, label-sep: -1pt)[$k$]
-        edge(X, "->", Z, shift: -5pt)[$h$]
+        edge(X, "->", Z, bend: 15deg, label-side: center)[$k$]
+        edge(X, "->", Z, bend: -15deg, label-side: center)[$h$]
         edge(Y, "->", Z, bend: 30deg)[$h f = k f$]
       }),
     ),

@@ -21,22 +21,23 @@
 ) = default-theorems("thm-group", lang: "en")
 #show: thm-rules
 
-#let grayed(x) = text(fill: gray, $#x$)
+#let dim(x) = text(fill: gray, $#x$)
 
 // end of preamble -------------------------
 
 = Pre-Requisite: @riehl2017category Chapter 1
 
+#let Category(x) = $text("Category")(#x)$
+
 #definition(
   name: "Category",
 )[A #emph("category") $cal(C)$ consists of #emph("objects") $X, Y, Z, ... in cal(C)$ and #emph("morphisms") $f, g, h, ... in cal(C)(X,Y)$ where $X in cal(C)$ is its #emph("domain") and $Y in cal(C)$ is its #emph("codomain"). Every object has an #emph("identity") morphism that is #emph("unital") with respect to #emph("composition") of morphisms that is #emph("associative").
-
   $
-    text("IsCat")(cal(C))
-    &= forall X grayed(in cal(C)). 1_X grayed(in cal(C)(X,X)) & text("Identity") #<identity> \
-    &and forall f grayed(in cal(C)(X,Y)), g grayed(in cal(C)(Y,Z)). g f grayed(in cal(C)(X,Z)) & text("Composition") #<composition> \
-    &and forall f grayed(in cal(C)(X,Y)). 1_Y f = f = f 1_X & text("Unital") #<unital> \
-    &and forall f grayed(in cal(C)(X,Y)), g grayed(in cal(C)(Y,Z)), h grayed(in cal(C)(Z,W)). h (g f) = (h g) f & text("Associative") #<associative>
+    Category(cal(C))
+    &:= forall X dim(in cal(C)). 1_X dim(in cal(C)(X,X)) & text("Identity") #<identity> \
+    &and forall f dim(in cal(C)(X,Y)), g dim(in cal(C)(Y,Z)). g f dim(in cal(C)(X,Z)) & text("Composition") #<composition> \
+    &and forall f dim(in cal(C)(X,Y)). 1_Y f = f = f 1_X & text("Unital") #<unital> \
+    &and forall f dim(in cal(C)(X,Y)), g dim(in cal(C)(Y,Z)), h dim(in cal(C)(Z,W)). h (g f) = (h g) f & text("Associative") #<associative>
   $
 
   #figure(
@@ -114,24 +115,31 @@
 #let Mor = $text("Mor")$;
 #let Set = $text("Set")$;
 
+#let Small(x) = $text("Small")(#x)$;
+
 #definition(name: "Small Category")[A category where it has only a set's worth of morphisms
   $
-    Mor cal(C) in Set
+    Small(cal(C)) & := Mor cal(C) in Set
   $
 ] <small>
 
+#let LocallySmall(x) = $text("LocallySmall")(#x)$;
+
 #definition(name: "Locally Small Category")[A category where its homs are a set's worth
   $
-    cal(C)(X,Y) in Set
+    LocallySmall(cal(C)) & := cal(C)(X,Y) in Set
   $
 ] <locallysmall>
 
 #let iso = math.tilde.equiv;
+#let Iso(x) = $text("Iso")(#x)$;
 
 #definition(name: "Isomorphism")[A morphism in a category that has an #emph("inverse")
   $
-    text("Iso")(f grayed(in cal(C)(X,Y))) & = exists g grayed(in cal(C)(Y,X)). g f = 1_X and f g = 1_Y \
-                                  X iso Y & = exists f grayed(in cal(C)(X,Y)). text("Iso")(f)
+    Iso(f dim(in cal(C)(X,Y))) & := exists g dim(in cal(C)(Y,X)). g f = 1_X and f g = 1_Y
+  $
+  $
+    X iso Y & := exists f dim(in cal(C)(X,Y)). Iso(f)
   $
 
   #figure(
@@ -151,9 +159,11 @@
   )
 ] <isomorphism>
 
+#let Endo(x) = $text("Endo")(#x)$;
+
 #definition(name: "Endomorphism")[A morphism whose domain and codomain are the same
   $
-    text("Endo")(f grayed(in cal(C)(X,Y))) & = (X attach(=, t: ?) Y) \
+    Endo(f dim(in cal(C)(X,Y))) & := (X = Y) \
   $
 
   #figure(
@@ -168,9 +178,11 @@
   )
 ] <endomorphism>
 
+#let Auto(x) = $text("Auto")(#x)$;
+
 #definition(name: "Automorphism")[An isomorphism thats also an endomorphism
   $
-    text("Auto")(f grayed(in cal(C)(X,Y))) & = text("Iso")(f) and text("Endo")(f)
+    Auto(f dim(in cal(C)(X,Y))) & := Iso(f) and Endo(f)
   $
 
   #figure(
@@ -187,16 +199,36 @@
   )
 ] <automorphism>
 
+#theorem(
+  name: "Identity Morphisms are Automorphisms",
+)[Identity morphisms are an endomorphism since their domain and codomain are the same object. They are also isomorphisms since they are their own inverse.
+  $
+    dim(forall X in cal(C).) Auto(1_X)
+  $
+]
+
+#let Let = $text("Let")$
+
+#proof[
+  $
+    Auto(1_X) = & Iso(1_X) and Endo(1_X)                & #ref(<automorphism>) \
+     Iso(1_X) = & exists g. g 1_X = 1_X and 1_X g = 1_X &  #ref(<isomorphism>) \
+              = & (1_X 1_X = 1_X and 1_X 1_X = 1_X)     &          Let g = 1_X \
+              = & top                                   &       #ref(<unital>) \
+    Endo(1_X) = & (X = X) = top                         & #ref(<endomorphism>)
+  $
+]
+
 #definition(name: "Subcategory")[A subset of objects and morphisms of a category that is also a category
   $
-    cal(D) subset.eq cal(C) & => text("IsCat")(cal(D))
+    dim(forall cal(C)\, cal(D).) cal(D) subset.eq cal(C) & => Category(cal(D))
   $
 ] <subcategory>
 
 #definition(name: "Opposite Category")[The category with all morphisms domain and codomain swapped
   $
-    cal(C)^op & => forall X in cal(C). X in cal(C)^op                                &       text("same objects") \
-              & and forall f grayed(in cal(C)(X,Y)). f^op grayed(in cal(C)^op (Y,X)) & text("reversed morphisms")
+    dim(forall cal(C).) cal(C)^op => & forall X in cal(C). X in cal(C)^op               &       text("same objects") \
+                                 and & forall f in cal(C)(X,Y). f^op in cal(C)^op (Y,X) & text("reversed morphisms")
   $
 ] <oppositecategory>
 
@@ -204,15 +236,17 @@
   name: "Dual Theorem",
 )[If a statement $P$ applies to all categories, then it also applies to opposite categories.
   $
-    (grayed(forall cal(C).) P(cal(C))) <=> (grayed(forall cal(C).) P(cal(C)^op))
+    (dim(forall cal(C).) P(cal(C))) <=> (dim(forall cal(C).) P(cal(C)^op))
   $
 ] <dualtheorem>
 
+#let Monic(x) = $text("Monic")(#x)$;
+
 #definition(
   name: "Monomorphism",
-)[A morphism when composed with any pair of parallel morphism are equal implies that the pair of parallel morphism are equal.
+)[A morphism when composed with any pair of parallel morphisms resulting in equal morphisms implies that the pair of parallel morphism are equal.
   $
-    text("Monic")(f grayed(in cal(C)(X,Y))) = forall h,k grayed(in cal(C)(Z,X)). f h = f k => h = k
+    Monic(f dim(in cal(C)(X,Y))) & := forall h,k dim(in cal(C)(Z,X)). f h = f k => h = k
   $
 
   #figure(
@@ -235,19 +269,21 @@
 ] <monomorphism>
 
 #theorem(
-  name: "Mono Injective Hom",
+  name: "Monic Injective Hom",
 )[If $X attach(>->, t: f) Y$ is monic, there is an injective map $f_*$ of morphisms from any $Z$ to $X$ to morphisms from $Z$ to $Y$ i.e. if $f_*(h) = g$ and $f_*(k) = g$ then $h = k$ where $f h$ and $f k$ is a candidate for $g$.
 
   $
-    text("Monic")(f grayed(in cal(C)(X,Y))) => exists f_* : cal(C)(Z,X) arrow.hook cal(C)(Z,Y).
+    dim(forall cal(C).) Monic(f dim(in cal(C)(X,Y))) => exists f_* : cal(C)(Z,X) arrow.hook cal(C)(Z,Y).
   $
 ]
 
+#let Epic(x) = $text("Epic")(#x)$;
+
 #definition(
   name: "Epimorphism",
-)[A morphism when pre-composed with any pair of parallel morphism are equal implies that the pair of parallel morphism are equal.
+)[A morphism when pre-composed with any pair of parallel morphisms resulting in equal morphisms implies that the pair of parallel morphism are equal.
   $
-    text("Epic")(f grayed(in cal(C)(Y,X))) = forall h,k grayed(in cal(C)(X,Z)). h f = k f => h = k
+    Epic(f dim(in cal(C)(Y,X))) & := forall h,k dim(in cal(C)(X,Z)). h f = k f => h = k
   $
 
   #figure(
@@ -270,26 +306,30 @@
 ] <epimorphism>
 
 #theorem(
-  name: "Epi Injective Hom",
+  name: "Epic Injective Hom",
 )[If $Y attach(->>, t: f) X$ is epic, there is an injective map $f^*$ of morphisms from $X$ to any $Z$ to morphisms from $Y$ to $Z$ i.e. if $f^*(h) = g$ and $f^*(k) = g$ then $h = k$ where $h f$ and $k f$ is a candidate for $g$.
 
   $
-    text("Epic")(f grayed(in cal(C)(Y,X))) => exists f^* : cal(C)(X,Z) arrow.hook cal(C)(Y,Z).
+    dim(forall cal(C).) Epic(f dim(in cal(C)(Y,X))) => exists f^* : cal(C)(X,Z) arrow.hook cal(C)(Y,Z).
   $
 ]
 
-#theorem(name: "Mono-Epi Dual Theorem")[A monomorphism is an epimorphism in its opposite category and vice versa.
+#theorem(name: "Monic-Epic Dual Theorem")[A monomorphism is an epimorphism in its opposite category and vice versa.
   $
-    forall cal(C). text("Monic")(f grayed(in cal(C)(X,Y))) <=> text("Epic")(f^op grayed(in cal(C)^op (Y,X)))
+    dim(forall cal(C).) Monic(f dim(in cal(C)(X,Y))) <=> Epic(f^op dim(in cal(C)^op (Y,X)))
   $
 ]
+
+#let Section(x, y) = $text("Section")(#x,#y)$;
+#let Retraction(x, y) = $text("Retraction")(#x,#y)$;
+#let Retract(x, y) = $text("Retract")(#x,#y)$;
 
 #definition(
   name: "Sections and Retractions",
 )[A #emph("section") is a right inverse to the #emph("retraction") that is a left inverse. The object defining the identity is called the #emph("retract").
   $
-    #text("Section") (s,r) = #text("Retraction") (r,s) = (r s attach(=, t: ?) 1_X) \
-    #text("Retract") (X grayed(in cal(C)),Y grayed(in cal(C))) = exists s grayed(in cal(C) (X,Y)), r grayed(in cal(C)(Y,X)). #text("Section") (s,r)
+               Section(s, r) = Retraction(r, s) & := (r s = 1_X) \
+    Retract(X dim(in cal(C)), Y dim(in cal(C))) & := exists s dim(in cal(C) (X,Y)), r dim(in cal(C)(Y,X)). Section(s, r)
   $
 
   #figure(
@@ -312,7 +352,7 @@
   name: "Sections are Monic, Retractions are Epic",
 )[Sections are monomorphisms and retractions are epimorphisms. We call them #emph("split monomorphisms") and #emph("split epimorphisms") respectively to emphasize this property.
   $
-    text("Section")(s,r) => text("Monic")(s) and text("Epic")(r)
+    dim(forall cal(C).) Section(s dim(in cal(C)(X,Y)), r dim(in cal(C)(Y,X))) => Monic(s) and Epic(r)
   $
   #figure(
     table(
@@ -344,15 +384,15 @@
   name: "Sections are Monic",
 )[
   $
-    text("Section")(s,r) => text("Monic")(s)
+    dim(forall cal(C).) Section(s dim(in cal(C)(X,Y)), r dim(in cal(C)(Y,X))) => Monic(s)
   $
   Let $s in cal(C)(X,Y)$ be a section to $r in cal(C)(Y,X)$ such that $r s = 1_X$. We show that $s$ is monic. Suppose that $s h = s k$ we show that $h = k$. Composing with $r$ we get that $r s h = r s k$ and so $1_X h = 1_X k$. By the unital property of identity morphisms, $1_X h = h$ and likewise $1_X k = k$. Thus, $h = k$ concluding that $s$ is monic.
   $
-    text("Section")(s,r) = & (r s = 1_X)                             & #ref(<section>) #<sections-are-monic-1> \
-        text("Monic")(s) = & (forall h, k. s h = s k => h = k)       &                    #ref(<monomorphism>) \
-                         = & forall h, k. s h = s k => 1_X h = 1_X k &                          #ref(<unital>) \
-                         = & forall h, k. s h = s k => r s h = r s k &            #ref(<sections-are-monic-1>) \
-                         = & top                                     &                     #ref(<composition>)
+    Section(s, r) = & (r s = 1_X)                             & #ref(<section>) #<sections-are-monic-1> \
+         Monic(s) = & (forall h, k. s h = s k => h = k)       &                    #ref(<monomorphism>) \
+                  = & forall h, k. s h = s k => 1_X h = 1_X k &                          #ref(<unital>) \
+                  = & forall h, k. s h = s k => r s h = r s k &            #ref(<sections-are-monic-1>) \
+                  = & top                                     &                     #ref(<composition>)
   $
 ] <sections-are-monic>
 
@@ -360,21 +400,21 @@
   name: "Retractions are Epic",
 )[
   $
-    text("Section")(s,r) => text("Epic")(r)
+    dim(forall cal(C).) Section(s dim(in cal(C)(X,Y)), r dim(in cal(C)(Y,X))) => Epic(r)
   $
   Let $r in cal(C)(Y,X)$ be a retraction to $s in cal(C)(X,Y)$ such that $r s = 1_X$. We show that $r$ is epic. Suppose that $i r = j r$ we show that $i = j$. Composing with $s$ we get that $i r s = j r s$ and so $i 1_X = j 1_X$. By the unital property of identity morphisms, $i 1_X = i$ and likewise $j 1_X = j$. Thus, $i = j$ concluding $r$ is epic.
   $
-    text("Section")(s,r) = & (r s = 1_X)                             & #ref(<section>) #<retractions-are-epic-1> \
-         text("Epic")(r) = & (forall i, j. i r = j r => i = j)       &                       #ref(<epimorphism>) \
-                         = & forall i, j. i r = j r => i 1_X = j 1_X &                            #ref(<unital>) \
-                         = & forall i, j. i r = j r => i r s = j r s &            #ref(<retractions-are-epic-1>) \
-                         = & top                                     &                       #ref(<composition>)
+    Section(s, r) = & (r s = 1_X)                             & #ref(<section>) #<retractions-are-epic-1> \
+          Epic(r) = & (forall i, j. i r = j r => i = j)       &                       #ref(<epimorphism>) \
+                  = & forall i, j. i r = j r => i 1_X = j 1_X &                            #ref(<unital>) \
+                  = & forall i, j. i r = j r => i r s = j r s &            #ref(<retractions-are-epic-1>) \
+                  = & top                                     &                       #ref(<composition>)
   $
 ] <retractions-are-epic>
 
 #theorem(name: "Isomorphisms are Monic and Epic")[
   $
-    text("Iso")(f) => text("Monic")(f) and text("Epic")(f)
+    dim(forall cal(C).) Iso(f dim(in cal(C)(X,Y))) => Monic(f) and Epic(f)
   $
   #figure(
     table(
@@ -403,15 +443,15 @@
   )
 ]
 
-#proof(name: "Isomorphisms are Monic and Epic")[
+#proof[
   $
-    text("Iso")(f) => text("Monic")(f) and text("Epic")(f)
+    dim(forall cal(C).) Iso(f dim(in cal(C)(X,Y))) => Monic(f) and Epic(f)
   $
   Let $f in cal(C)(X,Y)$ be an isomorphism with the inverse $g in cal(C)(Y,X)$. Thus, $f$ is a section to $g$ when $X$ is the retract since $g f = 1_X$. Moreover, $f$ is a retraction to $g$ when $Y$ is the retract since $f g = 1_Y$. Since sections are monic and retractions are epic, $f$ is both monic and epic.
   $
-    text("Iso")(f) = & (exists g. g f = 1_X and f g = 1_Y)                      &          #ref(<isomorphism>) \
-                   = & exists g. text("Section")(f,g) and text("Section")(g, f) &              #ref(<section>) \
-                   = & exists g. text("Monic")(f) and text("Epic")(f)           & #ref(<retractions-are-epic>) \
+    Iso(f) = & (exists g. g f = 1_X and f g = 1_Y)       &          #ref(<isomorphism>) \
+           = & exists g. Section(f, g) and Section(g, f) &              #ref(<section>) \
+           = & exists g. Monic(f) and Epic(f)            & #ref(<retractions-are-epic>) \
   $
 ]
 

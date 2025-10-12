@@ -348,12 +348,11 @@
   $
   Let $s in cal(C)(X,Y)$ be a section to $r in cal(C)(Y,X)$ such that $r s = 1_X$. We show that $s$ is monic. Suppose that $s h = s k$ we show that $h = k$. Composing with $r$ we get that $r s h = r s k$ and so $1_X h = 1_X k$. By the unital property of identity morphisms, $1_X h = h$ and likewise $1_X k = k$. Thus, $h = k$ concluding that $s$ is monic.
   $
-    text("Section")(s,r) = & (r s = 1_X)                             &      #ref(<section>) \
-        text("Monic")(s) = & (forall h, k. s h = s k => h = k)       & #ref(<monomorphism>) \
-                         = & forall h, k. s h = s k => 1_X h = 1_X k &       #ref(<unital>) \
-                         = & forall h, k. s h = s k => r s h = r s k &                      \
-                         = & forall h, k. top                        &  #ref(<composition>) \
-                         = & top
+    text("Section")(s,r) = & (r s = 1_X)                             & #ref(<section>) #<sections-are-monic-1> \
+        text("Monic")(s) = & (forall h, k. s h = s k => h = k)       &                    #ref(<monomorphism>) \
+                         = & forall h, k. s h = s k => 1_X h = 1_X k &                          #ref(<unital>) \
+                         = & forall h, k. s h = s k => r s h = r s k &            #ref(<sections-are-monic-1>) \
+                         = & top                                     &                     #ref(<composition>)
   $
 ] <sections-are-monic>
 
@@ -365,12 +364,11 @@
   $
   Let $r in cal(C)(Y,X)$ be a retraction to $s in cal(C)(X,Y)$ such that $r s = 1_X$. We show that $r$ is epic. Suppose that $i r = j r$ we show that $i = j$. Composing with $s$ we get that $i r s = j r s$ and so $i 1_X = j 1_X$. By the unital property of identity morphisms, $i 1_X = i$ and likewise $j 1_X = j$. Thus, $i = j$ concluding $r$ is epic.
   $
-    text("Section")(s,r) = & (r s = 1_X)                             &     #ref(<section>) \
-         text("Epic")(r) = & (forall i, j. i r = j r => i = j)       & #ref(<epimorphism>) \
-                         = & forall i, j. i r = j r => i 1_X = j 1_X &      #ref(<unital>) \
-                         = & forall i, j. i r = j r => i r s = j r s &                     \
-                         = & forall i, j. top                        & #ref(<composition>) \
-                         = & top
+    text("Section")(s,r) = & (r s = 1_X)                             & #ref(<section>) #<retractions-are-epic-1> \
+         text("Epic")(r) = & (forall i, j. i r = j r => i = j)       &                       #ref(<epimorphism>) \
+                         = & forall i, j. i r = j r => i 1_X = j 1_X &                            #ref(<unital>) \
+                         = & forall i, j. i r = j r => i r s = j r s &            #ref(<retractions-are-epic-1>) \
+                         = & top                                     &                       #ref(<composition>)
   $
 ] <retractions-are-epic>
 
@@ -411,9 +409,9 @@
   $
   Let $f in cal(C)(X,Y)$ be an isomorphism with the inverse $g in cal(C)(Y,X)$. Thus, $f$ is a section to $g$ when $X$ is the retract since $g f = 1_X$. Moreover, $f$ is a retraction to $g$ when $Y$ is the retract since $f g = 1_Y$. Since sections are monic and retractions are epic, $f$ is both monic and epic.
   $
-      text("Iso")(f) = & (exists g. g f = 1_X and f g = 1_Y)       &  #ref(<isomorphism>) \
-      =& exists g. text("Section")(f,g) and text("Section")(g, f) & #ref(<section>) \
-      =& exists g. text("Monic")(f) and text("Epic")(f)         & #ref(<retractions-are-epic>) \
+    text("Iso")(f) = & (exists g. g f = 1_X and f g = 1_Y)                      &          #ref(<isomorphism>) \
+                   = & exists g. text("Section")(f,g) and text("Section")(g, f) &              #ref(<section>) \
+                   = & exists g. text("Monic")(f) and text("Epic")(f)           & #ref(<retractions-are-epic>) \
   $
 ]
 

@@ -3,11 +3,11 @@
 
 // template --------------------------------
 #show: arkheion.with(
-  title: "Morphism Meetups Notes",
+  title: "Notes on Abstract Categories",
   authors: (
     (name: "Haliq", email: "haliq12@gmail.com", affiliation: "", orcid: "0009-0006-1276-363X"),
   ),
-  abstract: [Notes from Morphism Meetups; a reading group on learning higher category theory starting from 1-category.],
+  abstract: [These notes accompany Morphism Meetups; a reading group on learning higher category theory starting from 1-category. Here, we follow @riehl2017category, to define the taxonomy of abstract categories and their properties.],
   keywords: ("Category Theory", ""),
   date: ez-today.today(lang: "en"),
 )

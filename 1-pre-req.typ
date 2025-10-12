@@ -25,7 +25,7 @@
 
 // end of preamble -------------------------
 
-= Pre-Requisite: @riehl2017category Chapter 1
+= Categories, Functors and Naturality
 
 #let Category(x) = $text("Category")(#x)$
 

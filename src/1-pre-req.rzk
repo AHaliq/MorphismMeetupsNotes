@@ -1,0 +1,90 @@
+#lang rzk-1
+
+-- #define category
+--   ( Ob : U)
+--   : U
+--   -- hom set
+--   := Σ (Hom : Ob → Ob → U)
+--   -- identity: 1_X
+--   , Σ ( Id : (X : Ob) → Hom X X)
+--   -- composition: g f
+--   , Σ ( comp : (X : Ob) → (Y : Ob) → (Z : Ob)
+--     → Hom Y Z → Hom X Y → Hom X Z)
+--   -- unital left: 1_Y f = f
+--   , Σ ( _ : (X : Ob) → (Y : Ob) → (f : Hom X Y)
+--     → comp X Y Y (Id Y) f = f)
+--   -- unital right: f 1_X = f
+--   , Σ ( _ : (X : Ob) → (Y : Ob) → (f : Hom X Y)
+--     → comp X X Y f (Id X) = f)
+--   -- associative: h (g f) = (h g) f
+--   , ( W : Ob) → (X : Ob) → (Y : Ob) → (Z : Ob)
+--     → ( f : Hom X Y) → (g : Hom Y Z) → (h : Hom Z W)
+--     → comp X Z W h (comp X Y Z g f) = comp X Y W (comp Y Z W h g) f
+
+#define Δ¹
+  : 2 → TOPE
+  := \ _ → TOP
+
+#define Δ²
+  : (2 × 2) → TOPE
+  := \ (t, s) -> (s <= t)
+
+#define Λ
+  : (2 × 2) → TOPE
+  := \ (t, s) -> (s === 0₂) ∨ (t === 1₂)
+
+#section category
+
+#define hom (A : U) (x y : A)
+  : U
+  := (t : Δ¹) → A [ t ≡ 0₂ ↦ x , t ≡ 1₂ ↦ y ]
+
+#define id (A : U) (x : A)
+  : hom A x x
+  := \ _ -> x
+
+#define comp (A : U) (x y z : A)
+  : hom A y z -> hom A x y -> hom A x z
+  := \ g f -> \ (t : Δ¹) -> [ t ≡ 0₂ ↦ f , t ≡ 1₂ ↦ g ] t
+
+-- #define unital-left (A : U) (x y : A) (f : hom A x y)
+--   : comp A x y y (id A y) f 0₂ = f 0₂
+--   := refl_{x}
+
+-- #postulate unital-right (Ob : U)
+--   : ( X : Ob) → (Y : Ob) → (f : Hom Ob X Y)
+--   → comp Ob X X Y f (Id Ob X) = f
+
+-- #postulate associative (Ob : U)
+--   : ( W : Ob) → (X : Ob) → (Y : Ob) → (Z : Ob)
+--   → ( f : Hom Ob X Y) → (g : Hom Ob Y Z) → (h : Hom Ob Z W)
+--   → comp Ob X Z W h (comp Ob X Y Z g f) = comp Ob X Y W (comp Ob Y Z W h g) f
+
+#end category
+
+#section morphisms
+
+-- #postulate endomorphism (Ob : U)
+--   : ( X : Ob) → (Y : Ob) → Hom Ob X Y → X = Y
+
+-- #postulate isomorphism (Ob : U)
+--   : ( X : Ob) → (Y : Ob) → (f : Hom Ob X Y)
+--   → Σ ( g : Hom Ob Y X)
+--    , Σ ( _ : comp Ob X Y X g f = Id Ob X)
+--    , comp Ob Y X Y f g = Id Ob Y
+
+-- #postulate automorphism (Ob : U)
+--   : ( X : Ob) → (Y : Ob) → (f : Hom Ob X Y)
+--   → Σ ( _ : endomorphism Ob X Y f)
+--    , isomorphism Ob X Y f
+
+-- #postulate id-is-endo (Ob : U)
+--   : ( X : Ob) → endomorphism Ob X X (Id Ob X)
+
+-- #postulate id-is-iso (Ob : U)
+--   : ( X : Ob) → isomorphism Ob X X (Id Ob X)
+
+-- #postulate id-is-auto (Ob : U)
+--   : ( X : Ob) → automorphism Ob X X (Id Ob X)
+
+#end morphisms

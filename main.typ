@@ -8,7 +8,7 @@
   // authors: (
   //   (name: "Haliq", email: "haliq12@gmail.com", affiliation: "-", orcid: "0009-0006-1276-363X"),
   // ),
-  abstract: [Notes from Morphism Meetups; reading group on higher category theory.],
+  abstract: [Notes from Morphism Meetups; reading group on higher category theory. The notes attempt to be rigorous in defining concepts as logical predicates and will use them as composable blocks for proofs. They will be accompanied with commutative diagrams when relevant to provide visual intuition.],
   keywords: ("Category Theory", ""),
   date: datetime.today().display(),
 )

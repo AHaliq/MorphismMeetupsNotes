@@ -108,6 +108,7 @@
       $f in cal(C)(X,Y)$, $f: X -> Y$, $X attach(->, t: f) Y$,
     ),
   )
+  The hom-set notation is explicit about the underlying category whereas the type notation leaves it implicit. The commutative diagram notation notates the morphism as labels on arrows between objects.
 ] <category>
 
 #let Mor = $text("Mor")$;

@@ -21,35 +21,40 @@
 --     → ( f : Hom X Y) → (g : Hom Y Z) → (h : Hom Z W)
 --     → comp X Z W h (comp X Y Z g f) = comp X Y W (comp Y Z W h g) f
 
-#define Δ¹
+#define ∂Δ¹
   : 2 → TOPE
-  := \ _ → TOP
+  := \ t → (t ≡ 0₂) ∨ (t ≡ 1₂)
 
-#define Δ²
-  : (2 × 2) → TOPE
-  := \ (t, s) -> (s <= t)
+-- #define Δ²
+--   : ( 2 × 2) → TOPE
+--   := \ (t , s) → (s ≤ t)
 
-#define Λ
-  : (2 × 2) → TOPE
-  := \ (t, s) -> (s === 0₂) ∨ (t === 1₂)
+-- #define Λ
+--   : ( 2 × 2) → TOPE
+--   := \ (t , s) → (s ≡ 0₂) ∨ (t ≡ 1₂)
 
 #section category
 
 #define hom (A : U) (x y : A)
   : U
-  := (t : Δ¹) → A [ t ≡ 0₂ ↦ x , t ≡ 1₂ ↦ y ]
+  := (t : ∂Δ¹) → A [ t ≡ 0₂ ↦ x , t ≡ 1₂ ↦ y ]
+
+#define Eq-mor (A : U) (x y : A) (f g : hom A x y)
+  : U
+  := Σ (_ : f 0₂ = g 0₂) , f 1₂ = g 1₂
 
 #define id (A : U) (x : A)
   : hom A x x
-  := \ _ -> x
+  := \ _ → x
 
 #define comp (A : U) (x y z : A)
-  : hom A y z -> hom A x y -> hom A x z
-  := \ g f -> \ (t : Δ¹) -> [ t ≡ 0₂ ↦ f , t ≡ 1₂ ↦ g ] t
+  : hom A y z → hom A x y → hom A x z
+  := \ g f → \ t → recOR (t ≡ 0₂ ↦ f 0₂ , t ≡ 1₂ ↦ g 1₂)
 
--- #define unital-left (A : U) (x y : A) (f : hom A x y)
---   : comp A x y y (id A y) f 0₂ = f 0₂
---   := refl_{x}
+#define unital-left (A : U) (x y : A)
+  ( f : hom A x y)
+  : Eq-mor A x y (comp A x y y (id A y) f) f
+  := (refl_{x} , refl_{y})
 
 -- #postulate unital-right (Ob : U)
 --   : ( X : Ob) → (Y : Ob) → (f : Hom Ob X Y)

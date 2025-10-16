@@ -1,6 +1,9 @@
 #import "@preview/equate:0.3.2": equate
-#import "@preview/lemmify:0.1.8": *
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
+#import "0-preamble.typ": definition, proof, style, theorem, thm-rules
+
+#show: thm-rules
+#show: style
 
 // equate ----------------------------------
 
@@ -8,18 +11,7 @@
 #set math.equation(numbering: "(1.1)")
 
 // lemmify ---------------------------------
-#let (
-  definition,
-  theorem,
-  lemma,
-  corollary,
-  remark,
-  proposition,
-  example,
-  proof,
-  rules: thm-rules,
-) = default-theorems("thm-group", lang: "en")
-#show: thm-rules
+
 
 #let dim(x) = text(fill: gray, $#x$)
 
@@ -34,10 +26,10 @@
 )[A #emph("category") $cal(C)$ consists of #emph("objects") $X, Y, Z, ... in cal(C)$ and #emph("morphisms") $f, g, h, ... in cal(C)(X,Y)$ where $X in cal(C)$ is its #emph("domain") and $Y in cal(C)$ is its #emph("codomain"). Every object has an #emph("identity") morphism that is #emph("unital") with respect to #emph("composition") of morphisms that is #emph("associative").
   $
     Category(cal(C))
-    &:= forall X dim(in cal(C)). 1_X dim(in cal(C)(X,X)) & text("Identity") #<identity> \
-    &and forall f dim(in cal(C)(X,Y)), g dim(in cal(C)(Y,Z)). g f dim(in cal(C)(X,Z)) & text("Composition") #<composition> \
+    &:= forall X dim(in cal(C)). 1_X dim(in cal(C)(X,X)) & text("Id") #<identity> \
+    &and forall f dim(in cal(C)(X,Y)), g dim(in cal(C)(Y,Z)). g f dim(in cal(C)(X,Z)) & text("Comp") #<composition> \
     &and forall f dim(in cal(C)(X,Y)). 1_Y f = f = f 1_X & text("Unital") #<unital> \
-    &and forall f dim(in cal(C)(X,Y)), g dim(in cal(C)(Y,Z)), h dim(in cal(C)(Z,W)). h (g f) = (h g) f & text("Associative") #<associative>
+    &and forall f dim(in cal(C)(X,Y)), g dim(in cal(C)(Y,Z)), h dim(in cal(C)(Z,W)). h (g f) = (h g) f & text("Assoc") #<associative>
   $
 
   #figure(
@@ -109,8 +101,27 @@
       $f in cal(C)(X,Y)$, $f: X -> Y$, $X attach(->, t: f) Y$,
     ),
   )
-  The hom-set notation is explicit about the underlying category whereas the type notation leaves it implicit. The commutative diagram notation notates the morphism as labels on arrows between objects.
 ] <category>
+
+#theorem(name: "Identity is unique")[
+  $
+    Category(cal(C)) => forall X. exists! 1_X in cal(C)(X,X) 
+  $
+]
+
+#proof[
+  $
+    Category(cal(C)) =& (forall X. 1_X in cal(C)(X,X) & #ref(<identity>) \
+    and& forall f in cal(C)(X,Y). 1_Y f = f = f 1_X and ...) & #ref(<unital>) \
+    =& (forall X. 1_X, 1'_X in cal(C)(X,X)  \
+    and& forall f. 1_Y f = f = f 1_X and 1'_Y f = f = f 1'_X and ...) & text("stronger") \
+    => dim(forall X.)& 1_X 1'_X = 1'_X = 1'_X 1_X & #text("Let") f = 1'_X\
+    and& 1'_X 1_X = 1_X = 1'_X 1_X & #text("Let") f = 1_X \
+    =dim(forall X.)& 1_X 1'_X = 1'_X = 1'_X 1_X = 1_X = 1'_X 1_X & text("transitive") =\
+    => dim(forall X.)& 1_X = 1'_X \
+    => forall X.& exists! 1_X in cal(C)(X,X)
+  $
+]
 
 #let Mor = $text("Mor")$;
 #let Set = $text("Set")$;
@@ -211,11 +222,12 @@
 
 #proof[
   $
-    Auto(1_X) = & Iso(1_X) and Endo(1_X)                & #ref(<automorphism>) \
-     Iso(1_X) = & exists g. g 1_X = 1_X and 1_X g = 1_X &  #ref(<isomorphism>) \
-              = & (1_X 1_X = 1_X and 1_X 1_X = 1_X)     &          Let g = 1_X \
-              = & top                                   &       #ref(<unital>) \
-    Endo(1_X) = & (X = X) = top                         & #ref(<endomorphism>)
+    dim(forall X in cal(C)) & (1_X = 1_X)                           &   text("reflexivity") \
+                          = & (1_X 1_X = 1_X)                       &        #ref(<unital>) \
+                          = & (1_X 1_X = 1_X and 1_X 1_X = 1_X)     & text("idempotent")and \
+                 Iso(1_X) = & exists g. g 1_X = 1_X and 1_X g = 1_X &   #ref(<isomorphism>) \
+                Endo(1_X) = & (X = X) = top                         &  #ref(<endomorphism>) \
+                Auto(1_X) = & Iso(1_X) and Endo(1_X) = top          &  #ref(<automorphism>) \
   $
 ]
 
@@ -224,6 +236,72 @@
     dim(forall cal(C)\, cal(D).) cal(D) subset.eq cal(C) & => Category(cal(D))
   $
 ] <subcategory>
+
+
+#definition(name: "Slice Categories")[
+
+  $C slash cal(C)$ slice category of $cal(C)$ under $C$:
+  $
+    dim(C in cal(C)). & C slash cal(C) = { cal(C)(C,X) | X in cal(C)} = cal(C)(C,-) \
+                  and & C slash(cal(C))(f dim(in cal(C)(C,X)),g dim(in cal(C)(C,Y))) = h text("such that") h f = g
+  $
+  #figure(
+    table(
+      stroke: 0.5pt,
+      diagram({
+        let C = (0, 0)
+        let X = (1, 0)
+        let Y = (1, 1)
+        node(C, $C$)
+        node(X, $X$)
+        node(Y, $Y$)
+        edge(C, "->", X)[$f$]
+        edge(C, "->", Y)[$g$]
+        edge(X, "->", Y)[$h$]
+
+        node(enclose: (C, X, Y))
+
+
+        let f = (2, 0)
+        let g = (2, 1)
+        node(f, $f$)
+        node(g, $g$)
+        edge(f, "->", g)[$h$]
+        node(enclose: (f, g))
+      }),
+    ),
+  )
+
+  $C backslash cal(C)$ slice category of $cal(C)$ over $C$:
+  $
+    dim(C in cal(C)). & C backslash cal(C)(C) = { cal(C)(X,C) | X in cal(C)} = cal(C)(-,C) \
+                  and & C backslash(cal(C)(C))(f dim(in cal(C)(X,C)),g dim(in cal(C)(Y,C))) = h text("such that") g h = f
+  $
+  #figure(
+    table(
+      stroke: 0.5pt,
+      diagram({
+        let C = (0, 0)
+        let X = (1, 0)
+        let Y = (1, 1)
+        node(C, $C$)
+        node(X, $X$)
+        node(Y, $Y$)
+        edge(X, "->", C)[$f$]
+        edge(Y, "->", C)[$g$]
+        edge(X, "->", Y)[$h$]
+
+        node(enclose: (C, X, Y))
+        let f = (2, 0)
+        let g = (2, 1)
+        node(f, $f$)
+        node(g, $g$)
+        edge(f, "->", g)[$h$]
+        node(enclose: (f, g))
+      }),
+    ),
+  )
+] <slice-category>
 
 #definition(name: "Opposite Category")[The category with all morphisms domain and codomain swapped
   $
@@ -268,9 +346,17 @@
   )
 ] <monomorphism>
 
+#definition(
+  name: "Post-composition Function",
+)[A map indexed by the morphism $f$ from morphisms $h$ to $g$ such that $g = f h$.
+  $
+    f_* : cal(C)(Z,X) -> cal(C)(Z,Y) & := [h mapsto g] text("such that") g = f h
+  $
+]
+
 #theorem(
   name: "Monic Injective Hom",
-)[If $X attach(>->, t: f) Y$ is monic, there is an injective map $f_*$ of morphisms from any $Z$ to $X$ to morphisms from $Z$ to $Y$ i.e. if $f_*(h) = g$ and $f_*(k) = g$ then $h = k$ where $f h$ and $f k$ is a candidate for $g$.
+)[If $X attach(>->, t: f) Y$ is monic, there is an injective map $f_*$ of morphisms from any $Z$ to $X$ to morphisms from $Z$ to $Y$ i.e. if $f_*(h) = g$ and $f_*(k) = g$ then $h = k$ where $f h = f k = g$.
 
   $
     dim(forall cal(C).) Monic(f dim(in cal(C)(X,Y))) => exists f_* : cal(C)(Z,X) arrow.hook cal(C)(Z,Y).
@@ -305,9 +391,17 @@
   )
 ] <epimorphism>
 
+#definition(
+  name: "Pre-Composition Function",
+)[A map indexed by the morphism $f$ from morphisms $h$ to $g$ such that $g = h f$.
+  $
+    f^* : cal(C)(X,Z) -> cal(C)(Y,Z) & := [h mapsto g] text("such that") g = h f
+  $
+]
+
 #theorem(
   name: "Epic Injective Hom",
-)[If $Y attach(->>, t: f) X$ is epic, there is an injective map $f^*$ of morphisms from $X$ to any $Z$ to morphisms from $Y$ to $Z$ i.e. if $f^*(h) = g$ and $f^*(k) = g$ then $h = k$ where $h f$ and $k f$ is a candidate for $g$.
+)[If $Y attach(->>, t: f) X$ is epic, there is an injective map $f^*$ of morphisms from $X$ to any $Z$ to morphisms from $Y$ to $Z$ i.e. if $f^*(h) = g$ and $f^*(k) = g$ then $h = k$ where $h f = k f = g$.
 
   $
     dim(forall cal(C).) Epic(f dim(in cal(C)(Y,X))) => exists f^* : cal(C)(X,Z) arrow.hook cal(C)(Y,Z).
@@ -402,7 +496,7 @@
   $
     dim(forall cal(C).) Section(s dim(in cal(C)(X,Y)), r dim(in cal(C)(Y,X))) => Epic(r)
   $
-  Let $r in cal(C)(Y,X)$ be a retraction to $s in cal(C)(X,Y)$ such that $r s = 1_X$. We show that $r$ is epic. Suppose that $i r = j r$ we show that $i = j$. Composing with $s$ we get that $i r s = j r s$ and so $i 1_X = j 1_X$. By the unital property of identity morphisms, $i 1_X = i$ and likewise $j 1_X = j$. Thus, $i = j$ concluding $r$ is epic.
+  Let $r in cal(C)(Y,X)$ be a retraction to $s in cal(C)(X,Y)$ such that $r s = 1_X$. We show that $r$ is epic. Suppose that $i r = j r$ we show that $i = j$. Pre-composing with $s$ we get that $i r s = j r s$ and so $i 1_X = j 1_X$. By the unital property of identity morphisms, $i 1_X = i$ and likewise $j 1_X = j$. Thus, $i = j$ concluding $r$ is epic.
   $
     Section(s, r) = & (r s = 1_X)                             & #ref(<section>) #<retractions-are-epic-1> \
           Epic(r) = & (forall i, j. i r = j r => i = j)       &                       #ref(<epimorphism>) \
@@ -429,7 +523,7 @@
         node(W, $W$)
         node(Z, $Z$)
         edge(X, ">->>", Y, bend: 30deg)[$f$]
-        edge(Y, ">->>", X, bend: 30deg)[$g$]
+        edge(Y, "->", X, bend: 30deg)[$g$]
         edge(X, "->", X, bend: -130deg, loop-angle: -90deg)[$1_X=g f$]
         edge(Y, "->", Y, bend: -130deg, loop-angle: 90deg)[$1_Y=f g$]
         edge(W, "->", X, bend: 20deg, label-side: center)[$h$]
@@ -451,14 +545,137 @@
   $
     Iso(f) = & (exists g. g f = 1_X and f g = 1_Y)       &          #ref(<isomorphism>) \
            = & exists g. Section(f, g) and Section(g, f) &              #ref(<section>) \
-           = & exists g. Monic(f) and Epic(f)            & #ref(<retractions-are-epic>) \
+           => & Monic(f) and Epic(f)            & #ref(<retractions-are-epic>)
+  $
+] <isomorphisms-are-monic-and-epic>
+
+#theorem(name: "Isomorphism Inverse are unique")[
+  $
+    Iso(f) => & exists! g. g f = 1_X and f g = 1_Y
   $
 ]
 
+#proof[Let $f$ be an isomorphism with two inverses $g, h$. It must be that $g = h$ since $f$ is monic / epic.
+  $
+             Monic(f) = & forall a, b. f a = f b => a = b                     &                    #ref(<monomorphism>) \
+              Epic(f) = & forall a, b. a f = b f => a = b                     &                     #ref(<epimorphism>) \
+               Iso(f) = & exists g. g f = 1_X and f g = 1_Y                   &                     #ref(<isomorphism>) \
+                      = & exists g, h. ((g f = h f = 1_X and f g = f h = 1_Y) &                        text("stronger") \
+                     => & g = h)                                              & #ref(<isomorphisms-are-monic-and-epic>) \
+    therefore Iso(f) => & exists! g. g f = 1_X and f g = 1_Y
+  $
+] <iso-inv-unique>
 
-TODO
+#let Functor(x) = $text("Functor")(#x)$;
+#let Cat = $text("Cat")$;
+#definition(name: "Functor")[
+  Maps between categories that are #emph("left total") and #emph("preserves") composition and identity.
+  $
+    F : & cal(C) -> cal(D) \
+    Functor(F) := & forall X in cal(C). F X in cal(D) #<functor-obj-left-total> \
+    and & forall f in cal(C)(X,Y). F(f) in cal(D)(F X,F Y) & text("Left Total") #<functor-mor-left-total> \
+    and & forall f in cal(C)(X,Y), g in cal(C)(Y,Z). F(g f) = F(g) F(f) & text("Composition") #<functor-preserves-composition> \
+    and & forall X in cal(C). F(1_X) = 1_(F X) & text("Identity") #<functor-preserves-identity> \
+  $
+  We notationally omit the parentheses when applied to objects i.e. $F X = F(X)$ and use $attach(=>, t: F)$ to notate functor arrows in commutative diagrams.
 
-- functor
-- forgetful functor
-- contravariant functor
+  #figure(
+    table(
+      stroke: 0.5pt,
+      diagram({
+        let X = (0, 0)
+        let Y = (0, 1)
+        node(X, $X$)
+        node(Y, $Y$)
+        edge(X, "->", Y)[$f$]
+
+        let FX = (1, 0)
+        let FY = (1, 1)
+        node(FX, $F X$)
+        node(FY, $F Y$)
+        edge(FX, "->", FY, label-side: left)[$F(f)$]
+
+        edge((0.25, 0.5), "=>", (0.75, 0.5))[$F$]
+      }),
+    ),
+  )
+  Notice how $-^op : cal(C) -> cal(C)^op$ is a functor. Likewise if $C in cal(C)$ then $C slash - : cal(C) -> C slash cal(C)$ and $C backslash : cal(C) -> C backslash cal(C)$ are functors too. We just have to show that it preserves composition and identity.
+] <functor>
+
+#definition(
+  name: "Forgetful Functor",
+)[A general term that is used for any functor that forgets structure. e.g. mapping from the category of groups to set where the group structure is forgotten; group homomorphisms are forgotten to arbitrary functions.] <forgetful-functor>
+
+#let Contravariant(x) = $text("Contravariant")(#x)$;
+#let Covariant(x) = $text("Covariant")(#x)$;
+#definition(
+  name: "Contravariant Functors",
+)[Given a functor $F$ when we dualize the source category we get a contravariant functor.
+  $
+         Covariant(F) & := Functor(F : cal(C) -> cal(D)) \
+    Contravariant(F') & := Functor(F' : cal(C)^op -> cal(D)) \
+  $
+]
+
+#let Presheaf(x) = $text("Presheaf")(#x)$;
+#definition(name: "Presheaf")[A contravariant functor to the category of sets.
+  $
+    Presheaf(F : cal(C)^op -> Set) & := Contravariant(F)
+  $
+] <presheaf>
+
+#theorem(
+  name: "Presheaf over hom set",
+)[If $C in cal(C)$ and $f in cal(C)(X,Y)$ then $cal(C)(-, C)$ where $cal(C)(f^op, C)$ is the pre-composition function $f^*$ where $f^*(k) = h$ is a presheaf when $cal(C)$ is locally small.
+
+  $
+    Presheaf(cal(C)(-, C))
+  $
+
+  #figure(
+    table(
+      stroke: 0.5pt,
+      diagram({
+        let C = (-1, 1)
+        let X = (0, 0)
+        let Y = (0, 1)
+        node(X, $X$)
+        node(Y, $Y$)
+        node(C, $C$)
+        edge(X, "->", Y)[$f$]
+        edge(X, "->", C)[$h$]
+        edge(Y, "->", C)[$k$]
+
+        let FX = (1, 0)
+        let FY = (1, 1)
+        node(FX, $cal(C)(X,C)$)
+        node(FY, $cal(C)(Y,C)$)
+        edge(FY, "->", FX, label-side: right)[$f^*$]
+      }),
+    ),
+  )
+]
+
+#theorem(name: "Functors preserve split monomorphisms and split epimorphisms")[
+  $
+    Section(s, r) => Monic(F(s)) and Epic(F(r))
+  $
+  Note that if $s,r$ are monic and epic respectively but $r s = 1_X$ does not hold, $F$ does not necessarily preserves $F(s)$ to be monic and $F(r)$ to be epic.
+]
+
+#proof[Since functors preserve composition and identity, $F(r) F(s) = 1_(F X)$ holds when $r s = 1_X$. This makes $F(r)$ a retraction to $F(s)$ over the retract $F X$. Since sections are split monomorphisms and retractions are split epimorphisms, so are $F(s)$ and $F(r)$ respectively.
+  $
+       & Section(s, r) = (r s = 1_X) \
+       & F(r) F(s) = F(1_X)          & #ref(<functor-preserves-composition>) \
+     = & (F(r) F(s) = 1_(F X))       &    #ref(<functor-preserves-identity>) \
+     = & Section(F(s), F(r))         &                       #ref(<section>) \
+    => & Monic(F(s)) and Epic(F(r))  &            #ref(<sections-are-monic>)
+  $
+]
+
+- product category
+- bifunctor
+- data of covariant and contravariant as bifunctor
+- isomorphism of categories
+- comma category
 - naturality... onwards

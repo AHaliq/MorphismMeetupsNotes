@@ -39,6 +39,11 @@
   : U
   := (t : ∂Δ¹) → A [ t ≡ 0₂ ↦ x , t ≡ 1₂ ↦ y ]
 
+-- this is wrong, as you can have more than one morphism
+-- between the same objects
+-- you can use 1 simplex, but 0 |-> x, 1 |-> y, top |-> f
+-- top is morphism label. and when compose you get e.g. top |-> g f
+-- and you need label equality to exclude identities e.g. 1 f = f
 #define Eq-mor (A : U) (x y : A) (f g : hom A x y)
   : U
   := Σ (_ : f 0₂ = g 0₂) , f 1₂ = g 1₂

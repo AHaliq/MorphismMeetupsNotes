@@ -7,7 +7,7 @@
   authors: (
     (name: "Haliq", email: "haliq12@gmail.com", affiliation: "", orcid: "0009-0006-1276-363X"),
   ),
-  abstract: [These notes accompany Morphism Meetups; a reading group on learning higher category theory starting from 1-category. Here, we follow @riehl2017category, to define the taxonomy of abstract categories and their properties.],
+  abstract: [We build up to the definition of an abstract n-category starting from 1-category. Here, we follow @riehl2017category, to define the taxonomy of abstract categories and their properties.],
   keywords: ("Category Theory", ""),
   date: ez-today.today(lang: "en"),
 )

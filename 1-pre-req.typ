@@ -105,21 +105,22 @@
 
 #theorem(name: "Identity is unique")[
   $
-    Category(cal(C)) => forall X. exists! 1_X in cal(C)(X,X) 
+    Category(cal(C)) => forall X. exists! 1_X in cal(C)(X,X)
   $
 ]
 
 #proof[
+  Assuming there are two identity morphisms $1_X$ and $1'_X$ for every object $X$, then for any morphism $f: X -> Y$ by the unital property we know that $1_Y f = f = f 1_X$ and $1'_Y f = f = f 1'_X$. If we let $f= 1_X$ and $f = 1'_X$ we can see that $1_X 1'_X = 1'_X = 1'_X 1_X = 1_X = 1_X 1'_X$ which quotients $1_X = 1'_X$ making the identity unique.
   $
-    Category(cal(C)) =& (forall X. 1_X in cal(C)(X,X) & #ref(<identity>) \
-    and& forall f in cal(C)(X,Y). 1_Y f = f = f 1_X and ...) & #ref(<unital>) \
-    =& (forall X. 1_X, 1'_X in cal(C)(X,X)  \
-    and& forall f. 1_Y f = f = f 1_X and 1'_Y f = f = f 1'_X and ...) & text("stronger") \
-    => dim(forall X.)& 1_X 1'_X = 1'_X = 1'_X 1_X & #text("Let") f = 1'_X\
-    and& 1'_X 1_X = 1_X = 1'_X 1_X & #text("Let") f = 1_X \
-    =dim(forall X.)& 1_X 1'_X = 1'_X = 1'_X 1_X = 1_X = 1'_X 1_X & text("transitive") =\
-    => dim(forall X.)& 1_X = 1'_X \
-    => forall X.& exists! 1_X in cal(C)(X,X)
+    Category(cal(C)) = & (forall X. 1_X in cal(C)(X,X)                                &      #ref(<identity>) \
+                   and & forall f in cal(C)(X,Y). 1_Y f = f = f 1_X and ...)          &        #ref(<unital>) \
+                     = & (forall X. 1_X, 1'_X in cal(C)(X,X) \
+                   and & forall f. 1_Y f = f = f 1_X and 1'_Y f = f = f 1'_X and ...) &      text("stronger") \
+     => dim(forall X.) & 1_X 1'_X = 1'_X = 1'_X 1_X                                   & #text("Let") f = 1'_X \
+                   and & 1'_X 1_X = 1_X = 1'_X 1_X                                    &  #text("Let") f = 1_X \
+       =dim(forall X.) & 1_X 1'_X = 1'_X = 1'_X 1_X = 1_X = 1'_X 1_X                  &  text("transitive") = \
+     => dim(forall X.) & 1_X = 1'_X \
+          => forall X. & exists! 1_X in cal(C)(X,X)
   $
 ]
 
@@ -212,7 +213,7 @@
 
 #theorem(
   name: "Identity Morphisms are Automorphisms",
-)[Identity morphisms are an endomorphism since their domain and codomain are the same object. They are also isomorphisms since they are their own inverse.
+)[
   $
     dim(forall X in cal(C).) Auto(1_X)
   $
@@ -220,7 +221,7 @@
 
 #let Let = $text("Let")$
 
-#proof[
+#proof[Identity morphisms are an endomorphism since their domain and codomain are the same object. They are also isomorphisms since they are their own inverse.
   $
     dim(forall X in cal(C)) & (1_X = 1_X)                           &   text("reflexivity") \
                           = & (1_X 1_X = 1_X)                       &        #ref(<unital>) \
@@ -238,7 +239,9 @@
 ] <subcategory>
 
 
-#definition(name: "Slice Categories")[
+#definition(
+  name: "Slice Categories",
+)[A slice category of the underlying category $cal(C)$ fixes some object $C in cal(C)$. The slice category under $C$ has objects as morphisms from $C$. Similarly the slice category over $C$ has objects as morphisms to $C$.
 
   $C slash cal(C)$ slice category of $cal(C)$ under $C$:
   $
@@ -302,6 +305,106 @@
     ),
   )
 ] <slice-category>
+
+#proof[The slice category under $C$ is a category because for every object $f: C -> X$ the identity is $1_f = 1_X$. Composition exists by virtue that the objects are morphisms that are composable (and associative) in the underlying category. The unital property holds similarly.
+  $
+    Category(C slash cal(C)) =& forall f mat(delim: #none, in, cal(C)(C,X); in, C slash cal(C)). 1_f dim(in C slash cal(C)(f,f)) = 1_X in cal(C)(X,X) \
+    and& forall h mat(delim: #none, in, cal(C)(X,Y); in, C slash cal(C)(f,g)), j mat(delim: #none, in, cal(C)(Y,Z); in, C slash cal(C)(g,i)). j h in mat(delim: #none, in, cal(C)(X,Z); in, C slash cal(C)(f,i)) \
+    and& forall h dim(in C slash cal(C)(f,g)). 1_g h = 1_Y h = h = h 1_X = h 1_f \
+    and& forall h, j, l. l (j h) = (l j) h
+  $
+
+  #figure(
+    table(
+      stroke: 0.5pt,
+      diagram({
+        let C = (2, 0)
+        let X2 = (0, 1)
+        let X = (1, 1)
+        let Y = (2, 1)
+        let Z = (3, 1)
+        let W = (4, 1)
+        node(C, $C$)
+        node(X, $X$)
+        node(X2, $X$)
+        node(Y, $Y$)
+        node(Z, $Z$)
+        node(W, $W$)
+        edge(C, "->", X2, bend: -20deg)[$f$]
+        edge(C, "->", X, bend: -5deg)[$f$]
+        edge(X2, "->", X, label-side: right)[$1_X = 1_f$]
+        edge(C, "->", Y)[$g$]
+        edge(C, "->", Z, bend: 5deg)[$i$]
+        edge(C, "->", W, bend: 20deg)[$k$]
+        edge(X, "->", Y)[$h$]
+        edge(Y, "->", Z)[$j$]
+        edge(Z, "->", W)[$l$]
+
+        let f = (1, 1.6)
+        let g = (2, 1.6)
+        let i = (3, 1.6)
+        let k = (4, 1.6)
+        node(f, $f$)
+        node(g, $g$)
+        node(i, $i$)
+        node(k, $k$)
+        edge(f, "->", g)[$h$]
+        edge(g, "->", i)[$j$]
+        edge(i, "->", k)[$l$]
+      }),
+    ),
+  )
+]
+
+#proof[Likewise for the slice category over $C$, for every object $f: X -> C$ the identity is $1_f = 1_X$. Associative composition and unital properties hold by the same argument.
+  $
+    Category(C backslash cal(C)) =& forall f mat(delim: #none, in, cal(C)(X,C); in, C backslash cal(C)). 1_f dim(in C slash cal(C)(f,f)) = 1_X in cal(C)(X,X) \
+    and& forall h mat(delim: #none, in, cal(C)(X,Y); in, C backslash cal(C)(f,g)), j mat(delim: #none, in, cal(C)(Y,Z); in, C backslash cal(C)(g,i)). j h in mat(delim: #none, in, cal(C)(X,Z); in, C backslash cal(C)(f,i)) \
+    and& forall h dim(in C backslash cal(C)(f,g)). 1_g h = 1_Y h = h = h 1_X = h 1_f \
+    and& forall h, j, l. l (j h) = (l j) h
+  $
+
+  #figure(
+    table(
+      stroke: 0.5pt,
+      diagram({
+        let C = (2, 0)
+        let X2 = (0, 1)
+        let X = (1, 1)
+        let Y = (2, 1)
+        let Z = (3, 1)
+        let W = (4, 1)
+        node(C, $C$)
+        node(X, $X$)
+        node(X2, $X$)
+        node(Y, $Y$)
+        node(Z, $Z$)
+        node(W, $W$)
+        edge(C, "<-", X2, bend: -20deg)[$f$]
+        edge(C, "<-", X, bend: -5deg)[$f$]
+        edge(X2, "->", X, label-side: right)[$1_X = 1_f$]
+        edge(C, "<-", Y)[$g$]
+        edge(C, "<-", Z, bend: 5deg)[$i$]
+        edge(C, "<-", W, bend: 20deg)[$k$]
+        edge(X, "->", Y)[$h$]
+        edge(Y, "->", Z)[$j$]
+        edge(Z, "->", W)[$l$]
+
+        let f = (1, 1.6)
+        let g = (2, 1.6)
+        let i = (3, 1.6)
+        let k = (4, 1.6)
+        node(f, $f$)
+        node(g, $g$)
+        node(i, $i$)
+        node(k, $k$)
+        edge(f, "->", g)[$h$]
+        edge(g, "->", i)[$j$]
+        edge(i, "->", k)[$l$]
+      }),
+    ),
+  )
+]
 
 #definition(name: "Opposite Category")[The category with all morphisms domain and codomain swapped
   $
@@ -545,7 +648,7 @@
   $
     Iso(f) = & (exists g. g f = 1_X and f g = 1_Y)       &          #ref(<isomorphism>) \
            = & exists g. Section(f, g) and Section(g, f) &              #ref(<section>) \
-           => & Monic(f) and Epic(f)            & #ref(<retractions-are-epic>)
+          => & Monic(f) and Epic(f)                      & #ref(<retractions-are-epic>)
   $
 ] <isomorphisms-are-monic-and-epic>
 

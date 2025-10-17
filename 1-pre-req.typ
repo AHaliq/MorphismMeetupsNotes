@@ -20,6 +20,7 @@
 = Categories, Functors and Naturality
 
 #let Category(x) = $text("Category")(#x)$
+#let Identity(x) = $text("Identity")(#x)$
 
 #definition(
   name: "Category",
@@ -31,7 +32,7 @@
     &and forall f dim(in cal(C)(X,Y)). 1_Y f = f = f 1_X & text("Unital") #<unital> \
     &and forall f dim(in cal(C)(X,Y)), g dim(in cal(C)(Y,Z)), h dim(in cal(C)(Z,W)). h (g f) = (h g) f & text("Assoc") #<associative>
   $
-
+  When $cal(C)(X,Y)$ with $X, Y$ unquantified, it is shorthand for $forall X,Y in cal(C). cal(C)(X,Y)$.
   #figure(
     table(
       align: horizon + center,
@@ -85,7 +86,7 @@
         edge(Z, "->", W)[$h$]
         edge(X, "->", Z, bend: -20deg)[$g f$]
         edge(Y, "->", W, bend: 40deg)[$h g$]
-        edge(X, "->", W, bend: -40deg)[$h g f$]
+        edge(X, "->", W, bend: -40deg)[$h g f = h (g f) = (h g) f$]
       }),
     ),
   )
@@ -112,15 +113,13 @@
 #proof[
   Assuming there are two identity morphisms $1_X$ and $1'_X$ for every object $X$, then for any morphism $f: X -> Y$ by the unital property we know that $1_Y f = f = f 1_X$ and $1'_Y f = f = f 1'_X$. If we let $f= 1_X$ and $f = 1'_X$ we can see that $1_X 1'_X = 1'_X = 1'_X 1_X = 1_X = 1_X 1'_X$ which quotients $1_X = 1'_X$ making the identity unique.
   $
-    Category(cal(C)) = & (forall X. 1_X in cal(C)(X,X)                                &      #ref(<identity>) \
-                   and & forall f in cal(C)(X,Y). 1_Y f = f = f 1_X and ...)          &        #ref(<unital>) \
-                     = & (forall X. 1_X, 1'_X in cal(C)(X,X) \
-                   and & forall f. 1_Y f = f = f 1_X and 1'_Y f = f = f 1'_X and ...) &      text("stronger") \
-     => dim(forall X.) & 1_X 1'_X = 1'_X = 1'_X 1_X                                   & #text("Let") f = 1'_X \
-                   and & 1'_X 1_X = 1_X = 1'_X 1_X                                    &  #text("Let") f = 1_X \
-       =dim(forall X.) & 1_X 1'_X = 1'_X = 1'_X 1_X = 1_X = 1'_X 1_X                  &  text("transitive") = \
-     => dim(forall X.) & 1_X = 1'_X \
-          => forall X. & exists! 1_X in cal(C)(X,X)
+    Category(cal(C)) => & forall f dim(in cal(C)(X,Y)). 1_Y f = f = f 1_X   &       #ref(<unital>) \
+    Category(cal(C)) => & dim(forall X.) 1_X', 1_X dim(in cal(C)(X,X)) \
+                    and & forall f dim(in cal(C)(X,Y)). 1'_Y f = f = f 1'_X &      text("premise") \
+                     => & dim(forall X.) 1_X 1'_X = 1'_X = 1'_X 1_X         & text("Let") f = 1'_X \
+                    and & 1'_X 1_X = 1_X = 1'_X 1_X                         &  text("Let") f = 1_X \
+                     => & dim(forall X.) 1_X = 1'_X                         &  text("transitive")= \
+                     => & forall X. exists! 1_X in cal(C)(X,X)
   $
 ]
 
@@ -223,12 +222,16 @@
 
 #proof[Identity morphisms are an endomorphism since their domain and codomain are the same object. They are also isomorphisms since they are their own inverse.
   $
-    dim(forall X in cal(C)) & (1_X = 1_X)                           &   text("reflexivity") \
-                          = & (1_X 1_X = 1_X)                       &        #ref(<unital>) \
-                          = & (1_X 1_X = 1_X and 1_X 1_X = 1_X)     & text("idempotent")and \
-                 Iso(1_X) = & exists g. g 1_X = 1_X and 1_X g = 1_X &   #ref(<isomorphism>) \
-                Endo(1_X) = & (X = X) = top                         &  #ref(<endomorphism>) \
-                Auto(1_X) = & Iso(1_X) and Endo(1_X) = top          &  #ref(<automorphism>) \
+    Category(cal(C)) => & dim(forall X in cal(C).) 1_X in cal(C)(X,X) &                   #ref(<identity>) \
+                     => & dim(forall X in cal(C)). (1_X = 1_X)        &                text("reflexivity") \
+                      = & (1_X 1_X = 1_X)                             &                     #ref(<unital>) \
+                      = & (1_X 1_X = 1_X and 1_X 1_X = 1_X)           &              text("idempotent")and \
+                      = & exists g. g 1_X = 1_X and 1_Y g = 1_Y       &               text("intro") exists \
+                      = & Iso(1_X)                                    &                #ref(<isomorphism>) \
+                      = & Iso(1_X) and top                            & text("intro") and text("with" top) \
+                      = & Iso(1_X) and (X = X)                        &                text("reflexivity") \
+                      = & Iso(1_X) and Endo(1_X)                      &               #ref(<endomorphism>) \
+                      = & Auto(1_X)                                   &               #ref(<automorphism>) \
   $
 ]
 
@@ -243,7 +246,7 @@
   name: "Slice Categories",
 )[A slice category of the underlying category $cal(C)$ fixes some object $C in cal(C)$. The slice category under $C$ has objects as morphisms from $C$. Similarly the slice category over $C$ has objects as morphisms to $C$.
 
-  $C slash cal(C)$ slice category of $cal(C)$ under $C$:
+  #smallcaps[$C slash cal(C)$ slice category of $cal(C)$ under $C$:]
   $
     dim(C in cal(C)). & C slash cal(C) = { cal(C)(C,X) | X in cal(C)} = cal(C)(C,-) \
                   and & C slash(cal(C))(f dim(in cal(C)(C,X)),g dim(in cal(C)(C,Y))) = h text("such that") h f = g
@@ -275,7 +278,7 @@
     ),
   )
 
-  $C backslash cal(C)$ slice category of $cal(C)$ over $C$:
+  #smallcaps[$C backslash cal(C)$ slice category of $cal(C)$ over $C$]:
   $
     dim(C in cal(C)). & C backslash cal(C)(C) = { cal(C)(X,C) | X in cal(C)} = cal(C)(-,C) \
                   and & C backslash(cal(C)(C))(f dim(in cal(C)(X,C)),g dim(in cal(C)(Y,C))) = h text("such that") g h = f
@@ -308,7 +311,7 @@
 
 #proof[The slice category under $C$ is a category because for every object $f: C -> X$ the identity is $1_f = 1_X$. Composition exists by virtue that the objects are morphisms that are composable (and associative) in the underlying category. The unital property holds similarly.
   $
-    Category(C slash cal(C)) =& forall f mat(delim: #none, in, cal(C)(C,X); in, C slash cal(C)). 1_f dim(in C slash cal(C)(f,f)) = 1_X in cal(C)(X,X) \
+    Category(C slash cal(C)) =& forall f mat(delim: #none, in, cal(C)(C,X); in, C slash cal(C)). 1_f dim(in C slash cal(C)(f,f)) = 1_X dim(in cal(C)(X,X)) \
     and& forall h mat(delim: #none, in, cal(C)(X,Y); in, C slash cal(C)(f,g)), j mat(delim: #none, in, cal(C)(Y,Z); in, C slash cal(C)(g,i)). j h in mat(delim: #none, in, cal(C)(X,Z); in, C slash cal(C)(f,i)) \
     and& forall h dim(in C slash cal(C)(f,g)). 1_g h = 1_Y h = h = h 1_X = h 1_f \
     and& forall h, j, l. l (j h) = (l j) h
@@ -585,11 +588,13 @@
   $
   Let $s in cal(C)(X,Y)$ be a section to $r in cal(C)(Y,X)$ such that $r s = 1_X$. We show that $s$ is monic. Suppose that $s h = s k$ we show that $h = k$. Composing with $r$ we get that $r s h = r s k$ and so $1_X h = 1_X k$. By the unital property of identity morphisms, $1_X h = h$ and likewise $1_X k = k$. Thus, $h = k$ concluding that $s$ is monic.
   $
-    Section(s, r) = & (r s = 1_X)                             & #ref(<section>) #<sections-are-monic-1> \
-         Monic(s) = & (forall h, k. s h = s k => h = k)       &                    #ref(<monomorphism>) \
-                  = & forall h, k. s h = s k => 1_X h = 1_X k &                          #ref(<unital>) \
-                  = & forall h, k. s h = s k => r s h = r s k &            #ref(<sections-are-monic-1>) \
-                  = & top                                     &                     #ref(<composition>)
+    Section(s, r) = & (r s = 1_X)                             &       #ref(<section>) \
+       forall h, k. & s h = s k                               &       text("premise") \
+                  = & forall h, k. s h = s k => s h = s k     & text("idempotent") => \
+                  = & forall h, k. s h = s k => r s h = r s k &   #ref(<composition>) \
+                  = & forall h, k. s h = s k => 1_X h = 1_X k &       #ref(<section>) \
+                  = & forall h, k. s h = s k => h = k         &        #ref(<unital>) \
+                  = & Monic(s)
   $
 ] <sections-are-monic>
 
@@ -601,11 +606,13 @@
   $
   Let $r in cal(C)(Y,X)$ be a retraction to $s in cal(C)(X,Y)$ such that $r s = 1_X$. We show that $r$ is epic. Suppose that $i r = j r$ we show that $i = j$. Pre-composing with $s$ we get that $i r s = j r s$ and so $i 1_X = j 1_X$. By the unital property of identity morphisms, $i 1_X = i$ and likewise $j 1_X = j$. Thus, $i = j$ concluding $r$ is epic.
   $
-    Section(s, r) = & (r s = 1_X)                             & #ref(<section>) #<retractions-are-epic-1> \
-          Epic(r) = & (forall i, j. i r = j r => i = j)       &                       #ref(<epimorphism>) \
-                  = & forall i, j. i r = j r => i 1_X = j 1_X &                            #ref(<unital>) \
-                  = & forall i, j. i r = j r => i r s = j r s &            #ref(<retractions-are-epic-1>) \
-                  = & top                                     &                       #ref(<composition>)
+    Section(s, r) = & (r s = 1_X)                            &       #ref(<section>) \
+       forall i, j. & i r = j r                              &       text("premise") \
+                  = & forall i,j. i r = j r => i r = j r     & text("idempotent") => \
+                  = & forall i,j. i r = j r => i r s = j r s &   #ref(<composition>) \
+                  = & forall i,j. i r = j r => i 1_X = j 1_X &       #ref(<section>) \
+                  = & forall i,j. i r = j r => i = j         &        #ref(<unital>) \
+                  = & Epic(r)
   $
 ] <retractions-are-epic>
 
@@ -660,12 +667,12 @@
 
 #proof[Let $f$ be an isomorphism with two inverses $g, h$. It must be that $g = h$ since $f$ is monic / epic.
   $
-             Monic(f) = & forall a, b. f a = f b => a = b                     &                    #ref(<monomorphism>) \
-              Epic(f) = & forall a, b. a f = b f => a = b                     &                     #ref(<epimorphism>) \
-               Iso(f) = & exists g. g f = 1_X and f g = 1_Y                   &                     #ref(<isomorphism>) \
-                      = & exists g, h. ((g f = h f = 1_X and f g = f h = 1_Y) &                        text("stronger") \
-                     => & g = h)                                              & #ref(<isomorphisms-are-monic-and-epic>) \
-    therefore Iso(f) => & exists! g. g f = 1_X and f g = 1_Y
+    Monic(f) = & forall a, b. f a = f b => a = b                     &                    #ref(<monomorphism>) \
+     Epic(f) = & forall a, b. a f = b f => a = b                     &                     #ref(<epimorphism>) \
+      Iso(f) = & exists g. g f = 1_X and f g = 1_Y                   &                     #ref(<isomorphism>) \
+             = & exists g, h. g f = h f = 1_X and f g = f h = 1_Y &                        text("stronger") \
+            => & exists g, h. g f = h f => g = h  & #ref(<isomorphisms-are-monic-and-epic>) \
+            => & exists! g. g f = 1_X and f g = 1_Y
   $
 ] <iso-inv-unique>
 
@@ -768,8 +775,8 @@
 
 #proof[Since functors preserve composition and identity, $F(r) F(s) = 1_(F X)$ holds when $r s = 1_X$. This makes $F(r)$ a retraction to $F(s)$ over the retract $F X$. Since sections are split monomorphisms and retractions are split epimorphisms, so are $F(s)$ and $F(r)$ respectively.
   $
-       & Section(s, r) = (r s = 1_X) \
-       & F(r) F(s) = F(1_X)          & #ref(<functor-preserves-composition>) \
+       Section(s, r) =& (r s = 1_X) & #ref(<section>) \
+       =>& F(r) F(s) = F(1_X)          & #ref(<functor-preserves-composition>) \
      = & (F(r) F(s) = 1_(F X))       &    #ref(<functor-preserves-identity>) \
      = & Section(F(s), F(r))         &                       #ref(<section>) \
     => & Monic(F(s)) and Epic(F(r))  &            #ref(<sections-are-monic>)

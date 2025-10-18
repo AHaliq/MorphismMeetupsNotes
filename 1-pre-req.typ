@@ -437,6 +437,18 @@
     dim(exists cal(C)\, C in cal(C).) not Thin(C slash cal(C)) \
     dim(exists cal(C)\, C in cal(C).) not Thin(C backslash cal(C)) \
   $
+]
+
+#proof[Let $h, h' in C backslash cal(C)(f,g)$. Although composition is unique, it is unique for both operands. i.e. $forall f, g. exists! g f$. However, here it varies: $g h = f$, $g h' = f$ where $h != h'$. Compositions are unique, but "decompositions" (of $f$) are not necessarily. Thus, slice categories are not necessarily posetal, since theres more than one unique morphism.
+  $
+    dim(exists cal(C). forall h\, h' in C backslash cal(C)(f,g).) & h f = h' f and h != h'        &        text("premise") \
+                                                               => & |C backslash cal(C)(f,g)| > 1 & #ref(<slice-category>) \
+                                                               => & not Thin(C backslash cal(C))  &  #ref(<thin-category>) \
+        dim(exists cal(C). forall h\, h' in C slash cal(C)(f,g).) & f h = f h' and h != h'        &        text("premise") \
+                                                               => & |C slash cal(C)(f,g)| > 1     & #ref(<slice-category>) \
+                                                               => & not Thin(C slash cal(C))      &  #ref(<thin-category>)
+  $
+
   #figure(
     table(
       align: center + horizon,
@@ -469,17 +481,6 @@
     ),
   )
   Note that we used dashed arrows to indicate uniqueness.
-]
-  
-#proof[Let $h, h' in C backslash cal(C)(f,g)$. Although composition is unique, it is unique for both operands. i.e. $forall f, g. exists! g f$. However, here it varies: $g h = f$, $g h' = f$ where $h != h'$. Compositions are unique, but "decompositions" (of $f$) are not necessarily. Thus, slice categories are not necessarily posetal, since theres more than one unique morphism.
-  $
-    dim(exists cal(C). forall h\, h' in C backslash cal(C)(f,g).)& h f = h' f and h != h' & text("premise") \
-    =>& |C backslash cal(C)(f,g)| > 1 &#ref(<slice-category>) \
-    =>& not Thin(C backslash cal(C)) & #ref(<thin-category>)\
-    dim(exists cal(C). forall h\, h' in C slash cal(C)(f,g).)& f h = f h' and h != h' & text("premise") \
-    =>& |C slash cal(C)(f,g)| > 1 &#ref(<slice-category>)  \
-    =>& not Thin(C slash cal(C)) & #ref(<thin-category>)
-  $
 ] <slice-not-thin>
 
 #definition(name: "Opposite Category")[The category with all morphisms domain and codomain swapped
@@ -661,13 +662,13 @@
   $
   Let $s in cal(C)(X,Y)$ be a section to $r in cal(C)(Y,X)$ such that $r s = 1_X$. We show that $s$ is monic. Suppose that $s h = s k$ we show that $h = k$. Composing with $r$ we get that $r s h = r s k$ and so $1_X h = 1_X k$. By the unital property of identity morphisms, $1_X h = h$ and likewise $1_X k = k$. Thus, $h = k$ concluding that $s$ is monic.
   $
-    Section(s, r) = & (r s = 1_X)                             &       #ref(<section>) \
-       forall h, k. & s h = s k                               &       text("premise") \
-                  = & forall h, k. s h = s k => s h = s k     & text("idempotent") => \
-                  = & forall h, k. s h = s k => r s h = r s k &   #ref(<composition>) \
-                  = & forall h, k. s h = s k => 1_X h = 1_X k &       #ref(<section>) \
-                  = & forall h, k. s h = s k => h = k         &        #ref(<unital>) \
-                  = & Monic(s)
+    Section(s, r) = & (r s = 1_X)                             & #ref(<section>) #<secmonic> \
+                 => & forall h, k. s h = s k                  &             text("premise") \
+                  = & forall h, k. s h = s k => s h = s k     &       text("idempotent") => \
+                  = & forall h, k. s h = s k => r s h = r s k &         #ref(<composition>) \
+                  = & forall h, k. s h = s k => 1_X h = 1_X k &            #ref(<secmonic>) \
+                  = & forall h, k. s h = s k => h = k         &              #ref(<unital>) \
+                  = & Monic(s)                                &        #ref(<monomorphism>)
   $
 ] <sections-are-monic>
 
@@ -679,13 +680,13 @@
   $
   Let $r in cal(C)(Y,X)$ be a retraction to $s in cal(C)(X,Y)$ such that $r s = 1_X$. We show that $r$ is epic. Suppose that $i r = j r$ we show that $i = j$. Pre-composing with $s$ we get that $i r s = j r s$ and so $i 1_X = j 1_X$. By the unital property of identity morphisms, $i 1_X = i$ and likewise $j 1_X = j$. Thus, $i = j$ concluding $r$ is epic.
   $
-    Section(s, r) = & (r s = 1_X)                            &       #ref(<section>) \
-       forall i, j. & i r = j r                              &       text("premise") \
-                  = & forall i,j. i r = j r => i r = j r     & text("idempotent") => \
-                  = & forall i,j. i r = j r => i r s = j r s &   #ref(<composition>) \
-                  = & forall i,j. i r = j r => i 1_X = j 1_X &       #ref(<section>) \
-                  = & forall i,j. i r = j r => i = j         &        #ref(<unital>) \
-                  = & Epic(r)
+    Section(s, r) = & (r s = 1_X)                            & #ref(<section>) #<retepic1> \
+                 => & forall i, j. i r = j r                 &             text("premise") \
+                  = & forall i,j. i r = j r => i r = j r     &       text("idempotent") => \
+                  = & forall i,j. i r = j r => i r s = j r s &         #ref(<composition>) \
+                  = & forall i,j. i r = j r => i 1_X = j 1_X &            #ref(<retepic1>) \
+                  = & forall i,j. i r = j r => i = j         &              #ref(<unital>) \
+                  = & Epic(r)                                &         #ref(<epimorphism>)
   $
 ] <retractions-are-epic>
 
@@ -740,12 +741,12 @@
 
 #proof[Let $f$ be an isomorphism with two inverses $g, h$. It must be that $g = h$ since $f$ is monic / epic.
   $
-    Monic(f) = & forall a, b. f a = f b => a = b                  &                    #ref(<monomorphism>) \
-     Epic(f) = & forall a, b. a f = b f => a = b                  &                     #ref(<epimorphism>) \
-      Iso(f) = & exists g. g f = 1_X and f g = 1_Y                &                     #ref(<isomorphism>) \
-             = & exists g, h. g f = h f = 1_X and f g = f h = 1_Y &                        text("stronger") \
-            => & exists g, h. g f = h f => g = h                  & #ref(<isomorphisms-are-monic-and-epic>) \
-            => & exists! g. g f = 1_X and f g = 1_Y
+    Iso(f) => & Monic(f)                                         & #ref(<isomorphisms-are-monic-and-epic>) \
+            = & forall a, b. f a = f b => a = b                  &         #ref(<monomorphism>) #<isoinv1> \
+           => & exists g. g f = 1_X and f g = 1_Y                &                     #ref(<isomorphism>) \
+            = & exists g, h. g f = h f = 1_X and f g = f h = 1_Y &                         text("premise") \
+           => & exists g, h. f g = f h => g = h                  &                         #ref(<isoinv1>) \
+           => & exists! g. g f = 1_X and f g = 1_Y
   $
 ] <iso-inv-unique>
 

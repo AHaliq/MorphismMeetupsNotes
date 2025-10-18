@@ -22,6 +22,23 @@
 #let Category(x) = $text("Category")(#x)$
 #let Identity(x) = $text("Identity")(#x)$
 
+#let dom(x) = $text("dom")(#x)$
+#let cod(x) = $text("cod")(#x)$
+#definition(name: "Morphisms")[
+  A morphism (or arrow) is a directed edge from a _domain_ object to a _codomain_ object.
+  #figure(
+    table(
+      align: center + horizon,
+      columns: (auto, auto, auto, auto),
+      row-gutter: (2pt, auto),
+      stroke: 0.5pt,
+      inset: 7pt,
+      [hom], [type], [diagram], [algebra],
+      $f in cal(C)(X,Y)$, $f: X -> Y$, $X attach(->, t: f) Y$, $dom(f) = X, cod(f) = Y$,
+    ),
+  )
+]
+
 #definition(
   name: "Category",
 )[A #emph("category") $cal(C)$ consists of #emph("objects") $X, Y, Z, ... in cal(C)$ and #emph("morphisms") $f, g, h, ... in cal(C)(X,Y)$ where $X in cal(C)$ is its #emph("domain") and $Y in cal(C)$ is its #emph("codomain"). Every object has an #emph("identity") morphism that is #emph("unital") with respect to #emph("composition") of morphisms that is #emph("associative").
@@ -32,7 +49,7 @@
     &and forall f dim(in cal(C)(X,Y)). 1_Y f = f = f 1_X & text("Unital") #<unital> \
     &and forall f dim(in cal(C)(X,Y)), g dim(in cal(C)(Y,Z)), h dim(in cal(C)(Z,W)). h (g f) = (h g) f & text("Assoc") #<associative>
   $
-  When $cal(C)(X,Y)$ with $X, Y$ unquantified, it is shorthand for $forall X,Y in cal(C). cal(C)(X,Y)$.
+  When $cal(C)(X,Y)$ has $X, Y$ unquantified, it is shorthand for $forall X,Y in cal(C). cal(C)(X,Y)$.
   #figure(
     table(
       align: horizon + center,
@@ -90,31 +107,26 @@
       }),
     ),
   )
-  Morphisms can be notated as follows:
-  #figure(
-    table(
-      align: center,
-      columns: (auto, auto, auto),
-      row-gutter: (2pt, auto),
-      stroke: 0.5pt,
-      inset: 7pt,
-      [hom], [type], [diagram],
-      $f in cal(C)(X,Y)$, $f: X -> Y$, $X attach(->, t: f) Y$,
-    ),
-  )
 ] <category>
+
+#definition(name: "Composition is unique")[
+  $
+    Category(cal(C)) => forall f dim(in cal(C)(X,Y)), g dim(in cal(C)(Y,Z)). exists! h dim(in cal(C)(X,Z)). h = g f
+  $
+  $g f$ is notational shorthand for $g compose f$ where $compose : cal(C)(Y,Z) -> cal(C)(X,Y) -> cal(C)(X,Z)$, thus if the arguments are the same, then the resulting composition is unique. i.e. the composition operation returns a morphism, not a set of morphisms.
+] <composition-unique>
 
 #theorem(name: "Identity is unique")[
   $
     Category(cal(C)) => forall X. exists! 1_X in cal(C)(X,X)
   $
-]
+] <identity-unique>
 
 #proof[
   Assuming there are two identity morphisms $1_X$ and $1'_X$ for every object $X$, then for any morphism $f: X -> Y$ by the unital property we know that $1_Y f = f = f 1_X$ and $1'_Y f = f = f 1'_X$. If we let $f= 1_X$ and $f = 1'_X$ we can see that $1_X 1'_X = 1'_X = 1'_X 1_X = 1_X = 1_X 1'_X$ which quotients $1_X = 1'_X$ making the identity unique.
   $
     Category(cal(C)) => & forall f dim(in cal(C)(X,Y)). 1_Y f = f = f 1_X   &       #ref(<unital>) \
-    Category(cal(C)) => & dim(forall X.) 1_X', 1_X dim(in cal(C)(X,X)) \
+    Category(cal(C)) => & dim(forall X.) 1'_X, 1_X dim(in cal(C)(X,X)) \
                     and & forall f dim(in cal(C)(X,Y)). 1'_Y f = f = f 1'_X &      text("premise") \
                      => & dim(forall X.) 1_X 1'_X = 1'_X = 1'_X 1_X         & text("Let") f = 1'_X \
                     and & 1'_X 1_X = 1_X = 1'_X 1_X                         &  text("Let") f = 1_X \
@@ -122,6 +134,15 @@
                      => & forall X. exists! 1_X in cal(C)(X,X)
   $
 ]
+
+#let Thin(x) = $text("Thin")(#x)$;
+#definition(
+  name: "Thin Category",
+)[Alternatively called a _posetal_ category, is a category where there is at most one morphism between any two objects.
+  $
+    Thin(cal(C)) & := dim(forall X\,Y in cal(C).) |cal(C)(X,Y)| <= 1
+  $
+] <thin-category>
 
 #let Mor = $text("Mor")$;
 #let Set = $text("Set")$;
@@ -248,7 +269,7 @@
 
   #smallcaps[$C slash cal(C)$ slice category of $cal(C)$ under $C$:]
   $
-    dim(C in cal(C)). & C slash cal(C) = { cal(C)(C,X) | X in cal(C)} = cal(C)(C,-) \
+    dim(C in cal(C)). & C slash cal(C) = limits(union)_(X in cal(C)) cal(C)(C,X) = cal(C)(C,-) \
                   and & C slash(cal(C))(f dim(in cal(C)(C,X)),g dim(in cal(C)(C,Y))) = h text("such that") h f = g
   $
   #figure(
@@ -280,7 +301,7 @@
 
   #smallcaps[$C backslash cal(C)$ slice category of $cal(C)$ over $C$]:
   $
-    dim(C in cal(C)). & C backslash cal(C)(C) = { cal(C)(X,C) | X in cal(C)} = cal(C)(-,C) \
+    dim(C in cal(C)). & C backslash cal(C)(C) = limits(union)_(X in cal(C)) cal(C)(X,C) = cal(C)(-,C) \
                   and & C backslash(cal(C)(C))(f dim(in cal(C)(X,C)),g dim(in cal(C)(Y,C))) = h text("such that") g h = f
   $
   #figure(
@@ -408,6 +429,58 @@
     ),
   )
 ]
+
+#theorem(
+  name: "Slice Categories are not necessarily Posetal",
+)[
+  $
+    dim(exists cal(C)\, C in cal(C).) not Thin(C slash cal(C)) \
+    dim(exists cal(C)\, C in cal(C).) not Thin(C backslash cal(C)) \
+  $
+  #figure(
+    table(
+      align: center + horizon,
+      columns: (auto, auto),
+      stroke: 0.5pt,
+      diagram({
+        let C = (0, 0)
+        let X = (1, 0)
+        let Y = (1, 1)
+        node(C, $C$)
+        node(X, $X$)
+        node(Y, $Y$)
+        edge(X, "->", C)[$f$]
+        edge(Y, "->", C, label-side: left)[$g$]
+        edge(X, "-->", Y, bend: 10deg)[$h$]
+        edge(X, "-->", Y, bend: -10deg)[$h'$]
+      }),
+      diagram({
+        let C = (0, 0)
+        let X = (1, 0)
+        let Y = (1, 1)
+        node(C, $C$)
+        node(X, $X$)
+        node(Y, $Y$)
+        edge(C, "->", X)[$f$]
+        edge(C, "->", Y, label-side: right)[$g$]
+        edge(X, "-->", Y, bend: 10deg)[$h$]
+        edge(X, "-->", Y, bend: -10deg)[$h'$]
+      }),
+    ),
+  )
+  Note that we used dashed arrows to indicate uniqueness.
+]
+  
+#proof[Let $h, h' in C backslash cal(C)(f,g)$. Although composition is unique, it is unique for both operands. i.e. $forall f, g. exists! g f$. However, here it varies: $g h = f$, $g h' = f$ where $h != h'$. Compositions are unique, but "decompositions" (of $f$) are not necessarily. Thus, slice categories are not necessarily posetal, since theres more than one unique morphism.
+  $
+    dim(exists cal(C). forall h\, h' in C backslash cal(C)(f,g).)& h f = h' f and h != h' & text("premise") \
+    =>& |C backslash cal(C)(f,g)| > 1 &#ref(<slice-category>) \
+    =>& not Thin(C backslash cal(C)) & #ref(<thin-category>)\
+    dim(exists cal(C). forall h\, h' in C slash cal(C)(f,g).)& f h = f h' and h != h' & text("premise") \
+    =>& |C slash cal(C)(f,g)| > 1 &#ref(<slice-category>)  \
+    =>& not Thin(C slash cal(C)) & #ref(<thin-category>)
+  $
+] <slice-not-thin>
 
 #definition(name: "Opposite Category")[The category with all morphisms domain and codomain swapped
   $
@@ -667,11 +740,11 @@
 
 #proof[Let $f$ be an isomorphism with two inverses $g, h$. It must be that $g = h$ since $f$ is monic / epic.
   $
-    Monic(f) = & forall a, b. f a = f b => a = b                     &                    #ref(<monomorphism>) \
-     Epic(f) = & forall a, b. a f = b f => a = b                     &                     #ref(<epimorphism>) \
-      Iso(f) = & exists g. g f = 1_X and f g = 1_Y                   &                     #ref(<isomorphism>) \
+    Monic(f) = & forall a, b. f a = f b => a = b                  &                    #ref(<monomorphism>) \
+     Epic(f) = & forall a, b. a f = b f => a = b                  &                     #ref(<epimorphism>) \
+      Iso(f) = & exists g. g f = 1_X and f g = 1_Y                &                     #ref(<isomorphism>) \
              = & exists g, h. g f = h f = 1_X and f g = f h = 1_Y &                        text("stronger") \
-            => & exists g, h. g f = h f => g = h  & #ref(<isomorphisms-are-monic-and-epic>) \
+            => & exists g, h. g f = h f => g = h                  & #ref(<isomorphisms-are-monic-and-epic>) \
             => & exists! g. g f = 1_X and f g = 1_Y
   $
 ] <iso-inv-unique>
@@ -775,11 +848,11 @@
 
 #proof[Since functors preserve composition and identity, $F(r) F(s) = 1_(F X)$ holds when $r s = 1_X$. This makes $F(r)$ a retraction to $F(s)$ over the retract $F X$. Since sections are split monomorphisms and retractions are split epimorphisms, so are $F(s)$ and $F(r)$ respectively.
   $
-       Section(s, r) =& (r s = 1_X) & #ref(<section>) \
-       =>& F(r) F(s) = F(1_X)          & #ref(<functor-preserves-composition>) \
-     = & (F(r) F(s) = 1_(F X))       &    #ref(<functor-preserves-identity>) \
-     = & Section(F(s), F(r))         &                       #ref(<section>) \
-    => & Monic(F(s)) and Epic(F(r))  &            #ref(<sections-are-monic>)
+    Section(s, r) = & (r s = 1_X)                &                       #ref(<section>) \
+                 => & F(r) F(s) = F(1_X)         & #ref(<functor-preserves-composition>) \
+                  = & (F(r) F(s) = 1_(F X))      &    #ref(<functor-preserves-identity>) \
+                  = & Section(F(s), F(r))        &                       #ref(<section>) \
+                 => & Monic(F(s)) and Epic(F(r)) &            #ref(<sections-are-monic>)
   $
 ]
 

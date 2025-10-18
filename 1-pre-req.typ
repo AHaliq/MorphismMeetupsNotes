@@ -25,7 +25,7 @@
 #let dom(x) = $text("dom")(#x)$
 #let cod(x) = $text("cod")(#x)$
 #definition(name: "Morphisms")[
-  A morphism (or arrow) is a directed edge from a _domain_ object to a _codomain_ object.
+  A morphism (or _arrow_) $f$ is a directed edge from a _domain_ object $X$ to a _codomain_ object $Y$. We can notate them as follows:
   #figure(
     table(
       align: center + horizon,
@@ -41,7 +41,7 @@
 
 #definition(
   name: "Category",
-)[A #emph("category") $cal(C)$ consists of #emph("objects") $X, Y, Z, ... in cal(C)$ and #emph("morphisms") $f, g, h, ... in cal(C)(X,Y)$ where $X in cal(C)$ is its #emph("domain") and $Y in cal(C)$ is its #emph("codomain"). Every object has an #emph("identity") morphism that is #emph("unital") with respect to #emph("composition") of morphisms that is #emph("associative").
+)[A _category_ $cal(C)$ consists of _objects_ $X, Y, Z, ... in cal(C)$ and _morphisms_ $f, g, h, ... in cal(C)(X,Y)$. Every object has an _identity_ morphism that is _unital_ with respect to _composition_ of morphisms that is _associative_.
   $
     Category(cal(C))
     &:= forall X dim(in cal(C)). 1_X dim(in cal(C)(X,X)) & text("Id") #<identity> \
@@ -49,7 +49,7 @@
     &and forall f dim(in cal(C)(X,Y)). 1_Y f = f = f 1_X & text("Unital") #<unital> \
     &and forall f dim(in cal(C)(X,Y)), g dim(in cal(C)(Y,Z)), h dim(in cal(C)(Z,W)). h (g f) = (h g) f & text("Assoc") #<associative>
   $
-  When $cal(C)(X,Y)$ has $X, Y$ unquantified, it is shorthand for $forall X,Y in cal(C). cal(C)(X,Y)$.
+  When $cal(C)(X,Y)$ has $X$ and $Y$ unquantified, it notates them implicitly; $forall X,Y in cal(C). cal(C)(X,Y)$.
   #figure(
     table(
       align: horizon + center,
@@ -111,27 +111,29 @@
 
 #definition(name: "Composition is unique")[
   $
-    Category(cal(C)) => forall f dim(in cal(C)(X,Y)), g dim(in cal(C)(Y,Z)). exists! h dim(in cal(C)(X,Z)). h = g f
+    forall f dim(in cal(C)(X,Y)), g dim(in cal(C)(Y,Z)). exists! h dim(in cal(C)(X,Z)). h = g f
   $
   $g f$ is notational shorthand for $g compose f$ where $compose : cal(C)(Y,Z) -> cal(C)(X,Y) -> cal(C)(X,Z)$, thus if the arguments are the same, then the resulting composition is unique. i.e. the composition operation returns a morphism, not a set of morphisms.
 ] <composition-unique>
 
 #theorem(name: "Identity is unique")[
   $
-    Category(cal(C)) => forall X. exists! 1_X in cal(C)(X,X)
+    dim(forall X.) exists! 1_X dim(in cal(C)(X,X)) => forall f dim(in cal(C)(X,Y).) 1_Y f = f = f 1_X
   $
 ] <identity-unique>
 
 #proof[
   Assuming there are two identity morphisms $1_X$ and $1'_X$ for every object $X$, then for any morphism $f: X -> Y$ by the unital property we know that $1_Y f = f = f 1_X$ and $1'_Y f = f = f 1'_X$. If we let $f= 1_X$ and $f = 1'_X$ we can see that $1_X 1'_X = 1'_X = 1'_X 1_X = 1_X = 1_X 1'_X$ which quotients $1_X = 1'_X$ making the identity unique.
   $
-    Category(cal(C)) => & forall f dim(in cal(C)(X,Y)). 1_Y f = f = f 1_X   &       #ref(<unital>) \
-    Category(cal(C)) => & dim(forall X.) 1'_X, 1_X dim(in cal(C)(X,X)) \
-                    and & forall f dim(in cal(C)(X,Y)). 1'_Y f = f = f 1'_X &      text("premise") \
-                     => & dim(forall X.) 1_X 1'_X = 1'_X = 1'_X 1_X         & text("Let") f = 1'_X \
-                    and & 1'_X 1_X = 1_X = 1'_X 1_X                         &  text("Let") f = 1_X \
-                     => & dim(forall X.) 1_X = 1'_X                         &  text("transitive")= \
-                     => & forall X. exists! 1_X in cal(C)(X,X)
+        & dim(forall X in cal(C).) 1_X dim(in cal(C)(X,X))         &                   #ref(<identity>) \
+    and & forall f dim(in cal(C)(X,Y)). 1_Y f = f = f 1_X          &                     #ref(<unital>) \
+     => & dim(forall X in cal(C).) 1'_X dim(in cal(C)(X,X))        &                text("premise; id") \
+    and & forall f' dim(in cal(C)(X,Y)). 1'_Y f' = f' = f' 1'_X    & text("premise; unital") #<iduniq1> \
+     => & dim(forall X in cal(C).) (1_X 1'_X = 1'_X = 1'_X 1_X     &               text("Let") f = 1'_X \
+    and & 1'_X 1_X = 1_X = 1_X 1'_X)                               &               text("Let") f' = 1_X \
+     => & dim(forall X in cal(C).) 1_X = 1'_X                      &                text("transitive")= \
+     => & dim(forall X in cal(C).) exists! 1_X dim(in cal(C)(X,X)) &              text("intro") exists! \
+     => & forall f. 1_Y f = f = f 1_X                              &                    #ref(<iduniq1>)
   $
 ]
 
@@ -140,7 +142,7 @@
   name: "Thin Category",
 )[Alternatively called a _posetal_ category, is a category where there is at most one morphism between any two objects.
   $
-    Thin(cal(C)) & := dim(forall X\,Y in cal(C).) |cal(C)(X,Y)| <= 1
+    Thin(cal(C)) & := |cal(C)(X,Y)| <= 1
   $
 ] <thin-category>
 
@@ -163,10 +165,24 @@
   $
 ] <locally-small>
 
+#theorem(name: "Thin Categories are locally small")[
+  $
+    dim(forall cal(C).) Thin(cal(C)) => LocallySmall(cal(C))
+  $
+]
+
+#proof[Trivially if all hom sets are of cardinality at most one, it as a set's worth.
+  $
+    Thin(cal(C)) = & |cal(C)(X,Y)| <= 1   & #ref(<thin-category>) \
+                => & cal(C)(X,Y) in Set \
+                 = & LocallySmall(cal(C)) & #ref(<locally-small>) \
+  $
+]
+
 #let iso = math.tilde.equiv;
 #let Iso(x) = $text("Iso")(#x)$;
 
-#definition(name: "Isomorphism")[A morphism in a category that has an #emph("inverse")
+#definition(name: "Isomorphism")[A morphism in a category that has an _inverse_
   $
     Iso(f dim(in cal(C)(X,Y))) & := exists g dim(in cal(C)(Y,X)). g f = 1_X and f g = 1_Y
   $
@@ -208,6 +224,7 @@
       }),
     ),
   )
+  Note that what distinguishes an arbitrary endomorphism from the identity is that the identity is guaranteed unital; #ref(<unital>), under composition.
 ] <endomorphism>
 
 #let Auto(x) = $text("Auto")(#x)$;
@@ -243,17 +260,41 @@
 
 #proof[Identity morphisms are an endomorphism since their domain and codomain are the same object. They are also isomorphisms since they are their own inverse.
   $
-    Category(cal(C)) => & dim(forall X in cal(C).) 1_X in cal(C)(X,X) &                   #ref(<identity>) \
-                     => & dim(forall X in cal(C)). (1_X = 1_X)        &                text("reflexivity") \
-                      = & (1_X 1_X = 1_X)                             &                     #ref(<unital>) \
-                      = & (1_X 1_X = 1_X and 1_X 1_X = 1_X)           &              text("idempotent")and \
-                      = & exists g. g 1_X = 1_X and 1_Y g = 1_Y       &               text("intro") exists \
-                      = & Iso(1_X)                                    &                #ref(<isomorphism>) \
-                      = & Iso(1_X) and top                            & text("intro") and text("with" top) \
-                      = & Iso(1_X) and (X = X)                        &                text("reflexivity") \
-                      = & Iso(1_X) and Endo(1_X)                      &               #ref(<endomorphism>) \
-                      = & Auto(1_X)                                   &               #ref(<automorphism>) \
+    Category(cal(C)) => & dim(forall X in cal(C).) 1_X in cal(C)(X,X) &      #ref(<identity>) \
+                     => & dim(forall X in cal(C)). (1_X = 1_X)        &   text("reflexivity") \
+                      = & (1_X 1_X = 1_X)                             &        #ref(<unital>) \
+                      = & (1_X 1_X = 1_X and 1_X 1_X = 1_X)           & text("idempotent")and \
+                      = & exists g. g 1_X = 1_X and 1_Y g = 1_Y       &  text("intro") exists \
+                      = & Iso(1_X)                                    &   #ref(<isomorphism>) \
+                      = & Iso(1_X) and (X = X)                        &   text("reflexivity") \
+                      = & Iso(1_X) and Endo(1_X)                      &  #ref(<endomorphism>) \
+                      = & Auto(1_X)                                   &  #ref(<automorphism>) \
   $
+  #figure(
+    table(
+      align: center + horizon,
+      columns: (auto, auto),
+      stroke: 0.5pt,
+      diagram({
+        let X = (0, 0)
+        let Y = (1, 0)
+        node(X, $X$)
+        node(Y, $X$)
+        edge(X, "->", Y, bend: 30deg)[$1_X$]
+        edge(Y, "->", X, bend: 30deg)[$1_X$]
+        edge(X, "->", X, bend: -130deg, loop-angle: 0deg)[$1_X = 1_X 1_X$]
+        edge(Y, "->", Y, bend: -130deg, loop-angle: 180deg)[$1_X = 1_X 1_X$]
+      }),
+      diagram({
+        let X = (0, 0)
+        node(X, $X$)
+        edge(X, "->", X, bend: -130deg, loop-angle: 120deg)[$1_X$]
+        edge(X, "->", X, bend: -130deg, loop-angle: 20deg)[$1_X$]
+        edge(X, "->", X, bend: -130deg, loop-angle: 230deg)[$1_X=1_X 1_X$]
+      }),
+    ),
+  )
+  Note that we can duplicate objects in the diagram for clarity; there is only one $X$.
 ]
 
 #definition(name: "Subcategory")[A subset of objects and morphisms of a category that is also a category
@@ -262,19 +303,23 @@
   $
 ] <subcategory>
 
-
+#let SliceU(x, y) = $#x#h(-0.1em)slash#y$;
+#let SliceO(x, y) = $#x#h(-0em)backslash#h(-0.1em)#y$;
 #definition(
   name: "Slice Categories",
 )[A slice category of the underlying category $cal(C)$ fixes some object $C in cal(C)$. The slice category under $C$ has objects as morphisms from $C$. Similarly the slice category over $C$ has objects as morphisms to $C$.
 
-  #smallcaps[$C slash cal(C)$ slice category of $cal(C)$ under $C$:]
+  #smallcaps[$SliceU(C, cal(C))$ slice category of $cal(C)$ under $C$:]
   $
-    dim(C in cal(C)). & C slash cal(C) = limits(union)_(X in cal(C)) cal(C)(C,X) = cal(C)(C,-) \
-                  and & C slash(cal(C))(f dim(in cal(C)(C,X)),g dim(in cal(C)(C,Y))) = h text("such that") h f = g
+    dim(C in cal(C)). & SliceU(C, cal(C)) = limits(union)_(X in cal(C)) cal(C)(C,X) = cal(C)(C,-) \
+                  and & SliceU(C, cal(C))(f dim(in cal(C)(C,X)),g dim(in cal(C)(C,Y))) = { h | h f = g }
   $
   #figure(
     table(
+      align: center + horizon,
+      columns: (auto, auto),
       stroke: 0.5pt,
+      $cal(C)$, $SliceU(C, cal(C))$,
       diagram({
         let C = (0, 0)
         let X = (1, 0)
@@ -285,28 +330,28 @@
         edge(C, "->", X)[$f$]
         edge(C, "->", Y)[$g$]
         edge(X, "->", Y)[$h$]
-
-        node(enclose: (C, X, Y))
-
-
+      }),
+      diagram({
         let f = (2, 0)
         let g = (2, 1)
         node(f, $f$)
         node(g, $g$)
         edge(f, "->", g)[$h$]
-        node(enclose: (f, g))
       }),
     ),
   )
 
-  #smallcaps[$C backslash cal(C)$ slice category of $cal(C)$ over $C$]:
+  #smallcaps[$SliceO(C, cal(C))$ slice category of $cal(C)$ over $C$]:
   $
-    dim(C in cal(C)). & C backslash cal(C)(C) = limits(union)_(X in cal(C)) cal(C)(X,C) = cal(C)(-,C) \
-                  and & C backslash(cal(C)(C))(f dim(in cal(C)(X,C)),g dim(in cal(C)(Y,C))) = h text("such that") g h = f
+    dim(C in cal(C)). & SliceO(C, cal(C))(C) = limits(union)_(X in cal(C)) cal(C)(X,C) = cal(C)(-,C) \
+                  and & SliceO(C, cal(C))(C))(f dim(in cal(C)(X,C)),g dim(in cal(C)(Y,C))) = { h | g h = f}
   $
   #figure(
     table(
+      align: center + horizon,
+      columns: (auto, auto),
       stroke: 0.5pt,
+      $cal(C)$, $SliceO(C, cal(C))$,
       diagram({
         let C = (0, 0)
         let X = (1, 0)
@@ -317,8 +362,8 @@
         edge(X, "->", C)[$f$]
         edge(Y, "->", C)[$g$]
         edge(X, "->", Y)[$h$]
-
-        node(enclose: (C, X, Y))
+      }),
+      diagram({
         let f = (2, 0)
         let g = (2, 1)
         node(f, $f$)
@@ -332,9 +377,9 @@
 
 #proof[The slice category under $C$ is a category because for every object $f: C -> X$ the identity is $1_f = 1_X$. Composition exists by virtue that the objects are morphisms that are composable (and associative) in the underlying category. The unital property holds similarly.
   $
-    Category(C slash cal(C)) =& forall f mat(delim: #none, in, cal(C)(C,X); in, C slash cal(C)). 1_f dim(in C slash cal(C)(f,f)) = 1_X dim(in cal(C)(X,X)) \
-    and& forall h mat(delim: #none, in, cal(C)(X,Y); in, C slash cal(C)(f,g)), j mat(delim: #none, in, cal(C)(Y,Z); in, C slash cal(C)(g,i)). j h in mat(delim: #none, in, cal(C)(X,Z); in, C slash cal(C)(f,i)) \
-    and& forall h dim(in C slash cal(C)(f,g)). 1_g h = 1_Y h = h = h 1_X = h 1_f \
+    Category(SliceU(C, cal(C))) =& forall f mat(delim: #none, in, cal(C)(C,X); in, SliceU(C, cal(C))). 1_f dim(in SliceU(C, cal(C))(f,f)) = 1_X dim(in cal(C)(X,X)) \
+    and& forall h mat(delim: #none, in, cal(C)(X,Y); in, SliceU(C, cal(C))(f,g)), j mat(delim: #none, in, cal(C)(Y,Z); in, SliceU(C, cal(C))(g,i)). j h in mat(delim: #none, in, cal(C)(X,Z); in, SliceU(C, cal(C))(f,i)) \
+    and& forall h dim(in SliceU(C, cal(C))(f,g)). 1_g h = 1_Y h = h = h 1_X = h 1_f \
     and& forall h, j, l. l (j h) = (l j) h
   $
 
@@ -382,9 +427,9 @@
 
 #proof[Likewise for the slice category over $C$, for every object $f: X -> C$ the identity is $1_f = 1_X$. Associative composition and unital properties hold by the same argument.
   $
-    Category(C backslash cal(C)) =& forall f mat(delim: #none, in, cal(C)(X,C); in, C backslash cal(C)). 1_f dim(in C slash cal(C)(f,f)) = 1_X in cal(C)(X,X) \
-    and& forall h mat(delim: #none, in, cal(C)(X,Y); in, C backslash cal(C)(f,g)), j mat(delim: #none, in, cal(C)(Y,Z); in, C backslash cal(C)(g,i)). j h in mat(delim: #none, in, cal(C)(X,Z); in, C backslash cal(C)(f,i)) \
-    and& forall h dim(in C backslash cal(C)(f,g)). 1_g h = 1_Y h = h = h 1_X = h 1_f \
+    Category(SliceO(C, cal(C))) =& forall f mat(delim: #none, in, cal(C)(X,C); in, SliceO(C, cal(C))). 1_f dim(in SliceO(C, cal(C))(f,f)) = 1_X in cal(C)(X,X) \
+    and& forall h mat(delim: #none, in, cal(C)(X,Y); in, SliceO(C, cal(C))(f,g)), j mat(delim: #none, in, cal(C)(Y,Z); in, SliceO(C, cal(C))(g,i)). j h in mat(delim: #none, in, cal(C)(X,Z); in, SliceO(C, cal(C))(f,i)) \
+    and& forall h dim(in SliceO(C, cal(C))(f,g)). 1_g h = 1_Y h = h = h 1_X = h 1_f \
     and& forall h, j, l. l (j h) = (l j) h
   $
 
@@ -434,19 +479,19 @@
   name: "Slice Categories are not necessarily Posetal",
 )[
   $
-    dim(exists cal(C)\, C in cal(C).) not Thin(C slash cal(C)) \
-    dim(exists cal(C)\, C in cal(C).) not Thin(C backslash cal(C)) \
+    dim(exists cal(C)\, C in cal(C).) not Thin(SliceU(C, cal(C))) \
+    dim(exists cal(C)\, C in cal(C).) not Thin(SliceO(C, cal(C))) \
   $
 ]
 
-#proof[Let $h, h' in C backslash cal(C)(f,g)$. Although composition is unique, it is unique for both operands. i.e. $forall f, g. exists! g f$. However, here it varies: $g h = f$, $g h' = f$ where $h != h'$. Compositions are unique, but "decompositions" (of $f$) are not necessarily. Thus, slice categories are not necessarily posetal, since theres more than one unique morphism.
+#proof[Let $h, h' in SliceO(C, cal(C))(f,g)$. Although composition is unique, it is unique for both operands. i.e. $forall f, g. exists! g f$. However, here it varies: $g h = f$, $g h' = f$ where $h != h'$. Compositions are unique, but "decompositions" (of $f$) are not necessarily. Thus, slice categories are not necessarily posetal, since theres more than one unique morphism.
   $
-    dim(exists cal(C). forall h\, h' in C backslash cal(C)(f,g).) & h f = h' f and h != h'        &        text("premise") \
-                                                               => & |C backslash cal(C)(f,g)| > 1 & #ref(<slice-category>) \
-                                                               => & not Thin(C backslash cal(C))  &  #ref(<thin-category>) \
-        dim(exists cal(C). forall h\, h' in C slash cal(C)(f,g).) & f h = f h' and h != h'        &        text("premise") \
-                                                               => & |C slash cal(C)(f,g)| > 1     & #ref(<slice-category>) \
-                                                               => & not Thin(C slash cal(C))      &  #ref(<thin-category>)
+    dim(exists cal(C). forall h\, h' in SliceO(C, cal(C))(f,g).) & h f = h' f = g and h != h'   &        text("premise") \
+                                                              => & |SliceO(C, cal(C))(f,g)| > 1 & #ref(<slice-category>) \
+                                                              => & not Thin(SliceO(C, cal(C)))  &  #ref(<thin-category>) \
+    dim(exists cal(C). forall h\, h' in SliceU(C, cal(C))(f,g).) & f h = f h' = g and h != h'   &        text("premise") \
+                                                              => & |SliceU(C, cal(C))(f,g)| > 1 & #ref(<slice-category>) \
+                                                              => & not Thin(SliceU(C, cal(C)))  &  #ref(<thin-category>)
   $
 
   #figure(
@@ -480,7 +525,7 @@
       }),
     ),
   )
-  Note that we used dashed arrows to indicate uniqueness.
+  Note that dashed arrows indicate unique morphisms.
 ] <slice-not-thin>
 
 #definition(name: "Opposite Category")[The category with all morphisms domain and codomain swapped
@@ -600,7 +645,7 @@
 
 #definition(
   name: "Sections and Retractions",
-)[A #emph("section") is a right inverse to the #emph("retraction") that is a left inverse. The object defining the identity is called the #emph("retract").
+)[A _section_ is a right inverse to the _retraction_ that is a left inverse. The object defining the identity is called the _retract_.
   $
                Section(s, r) = Retraction(r, s) & := (r s = 1_X) \
     Retract(X dim(in cal(C)), Y dim(in cal(C))) & := exists s dim(in cal(C) (X,Y)), r dim(in cal(C)(Y,X)). Section(s, r)
@@ -624,7 +669,7 @@
 
 #theorem(
   name: "Sections are Monic, Retractions are Epic",
-)[Sections are monomorphisms and retractions are epimorphisms. We call them #emph("split monomorphisms") and #emph("split epimorphisms") respectively to emphasize this property.
+)[Sections are monomorphisms and retractions are epimorphisms. We call them _split monomorphisms_ and _split epimorphisms_ respectively to emphasize this property.
   $
     dim(forall cal(C).) Section(s dim(in cal(C)(X,Y)), r dim(in cal(C)(Y,X))) => Monic(s) and Epic(r)
   $
@@ -746,14 +791,14 @@
            => & exists g. g f = 1_X and f g = 1_Y                &                     #ref(<isomorphism>) \
             = & exists g, h. g f = h f = 1_X and f g = f h = 1_Y &                         text("premise") \
            => & exists g, h. f g = f h => g = h                  &                         #ref(<isoinv1>) \
-           => & exists! g. g f = 1_X and f g = 1_Y
+           => & exists! g. g f = 1_X and f g = 1_Y               &                   text("intro") exists!
   $
 ] <iso-inv-unique>
 
 #let Functor(x) = $text("Functor")(#x)$;
 #let Cat = $text("Cat")$;
 #definition(name: "Functor")[
-  Maps between categories that are #emph("left total") and #emph("preserves") composition and identity.
+  Maps between categories that are _left total_ and _preserves_ composition and identity.
   $
     F : & cal(C) -> cal(D) \
     Functor(F) := & forall X in cal(C). F X in cal(D) #<functor-obj-left-total> \
@@ -783,7 +828,7 @@
       }),
     ),
   )
-  Notice how $-^op : cal(C) -> cal(C)^op$ is a functor. Likewise if $C in cal(C)$ then $C slash - : cal(C) -> C slash cal(C)$ and $C backslash : cal(C) -> C backslash cal(C)$ are functors too. We just have to show that it preserves composition and identity.
+  Notice how $-^op : cal(C) -> cal(C)^op$ is a functor. Likewise if $C in cal(C)$ then $SliceU(C, -) : cal(C) -> SliceU(C, cal(C))$ and $SliceO(C, -) : cal(C) -> SliceO(C, cal(C))$ are functors too. We just have to show that it preserves composition and identity.
 ] <functor>
 
 #definition(
@@ -794,17 +839,18 @@
 #let Covariant(x) = $text("Covariant")(#x)$;
 #definition(
   name: "Contravariant Functors",
-)[Given a functor $F$ when we dualize the source category we get a contravariant functor.
+)[Given a functor $F$ when we dualize the domain category we get a contravariant functor. The original non-dualized functor is called a _covariant_ functor.
   $
-         Covariant(F) & := Functor(F : cal(C) -> cal(D)) \
-    Contravariant(F') & := Functor(F' : cal(C)^op -> cal(D)) \
+                    Covariant(F) & := Functor(F : cal(C) -> cal(D)) \
+       Contravariant(F\, cal(C)) & := Functor(F : cal(C)^op -> cal(D)) \
+    Contravariant(F\, cal(C)^op) & = Covariant(F)
   $
 ]
 
 #let Presheaf(x) = $text("Presheaf")(#x)$;
 #definition(name: "Presheaf")[A contravariant functor to the category of sets.
   $
-    Presheaf(F : cal(C)^op -> Set) & := Contravariant(F)
+    Presheaf(F\, cal(C)) & := Contravariant(F\, cal(C)) and cod(F) = Set
   $
 ] <presheaf>
 
@@ -813,7 +859,7 @@
 )[If $C in cal(C)$ and $f in cal(C)(X,Y)$ then $cal(C)(-, C)$ where $cal(C)(f^op, C)$ is the pre-composition function $f^*$ where $f^*(k) = h$ is a presheaf when $cal(C)$ is locally small.
 
   $
-    Presheaf(cal(C)(-, C))
+    LocallySmall(cal(C)) => Presheaf(cal(C)(-, C)\, cal(C))
   $
 
   #figure(

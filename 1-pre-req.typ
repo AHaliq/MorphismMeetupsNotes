@@ -140,7 +140,7 @@
 #let Thin(x) = $text("Thin")(#x)$;
 #definition(
   name: "Thin Category",
-)[Alternatively called a _posetal_ category, is a category where there is at most one morphism between any two objects.
+)[Alternatively called a _posetal_ category, is a category where there is at most one morphism between any two objects. The name posetal comes from the category modelling a partially ordered set where there is at most one morphism between any two objects modelling the $<=$ relation.
   $
     Thin(cal(C)) & := |cal(C)(X,Y)| <= 1
   $
@@ -260,15 +260,15 @@
 
 #proof[Identity morphisms are an endomorphism since their domain and codomain are the same object. They are also isomorphisms since they are their own inverse.
   $
-    Category(cal(C)) => & dim(forall X in cal(C).) 1_X in cal(C)(X,X) &      #ref(<identity>) \
-                     => & dim(forall X in cal(C)). (1_X = 1_X)        &   text("reflexivity") \
-                      = & (1_X 1_X = 1_X)                             &        #ref(<unital>) \
-                      = & (1_X 1_X = 1_X and 1_X 1_X = 1_X)           & text("idempotent")and \
-                      = & exists g. g 1_X = 1_X and 1_Y g = 1_Y       &  text("intro") exists \
-                      = & Iso(1_X)                                    &   #ref(<isomorphism>) \
-                      = & Iso(1_X) and (X = X)                        &   text("reflexivity") \
-                      = & Iso(1_X) and Endo(1_X)                      &  #ref(<endomorphism>) \
-                      = & Auto(1_X)                                   &  #ref(<automorphism>) \
+       & dim(forall X in cal(C).) 1_X in cal(C)(X,X) &      #ref(<identity>) \
+    => & dim(forall X in cal(C)). (1_X = 1_X)        &   text("reflexivity") \
+     = & (1_X 1_X = 1_X)                             &        #ref(<unital>) \
+     = & (1_X 1_X = 1_X and 1_X 1_X = 1_X)           & text("idempotent")and \
+     = & exists g. g 1_X = 1_X and 1_Y g = 1_Y       &  text("intro") exists \
+     = & Iso(1_X)                                    &   #ref(<isomorphism>) \
+     = & Iso(1_X) and (X = X)                        &   text("reflexivity") \
+     = & Iso(1_X) and Endo(1_X)                      &  #ref(<endomorphism>) \
+     = & Auto(1_X)                                   &  #ref(<automorphism>) \
   $
   #figure(
     table(
@@ -311,8 +311,8 @@
 
   #smallcaps[$SliceU(C, cal(C))$ slice category of $cal(C)$ under $C$:]
   $
-    dim(C in cal(C)). & SliceU(C, cal(C)) = limits(union)_(X in cal(C)) cal(C)(C,X) = cal(C)(C,-) \
-                  and & SliceU(C, cal(C))(f dim(in cal(C)(C,X)),g dim(in cal(C)(C,Y))) = { h | h f = g }
+    dim(C in cal(C)). & SliceU(C, cal(C)) &= limits(union)_(X in cal(C)) cal(C)(C,X) \
+    and & SliceU(C, cal(C))(f dim(in cal(C)(C,X)),g dim(in cal(C)(C,Y))) &= { h | h f = g }
   $
   #figure(
     table(
@@ -343,8 +343,8 @@
 
   #smallcaps[$SliceO(C, cal(C))$ slice category of $cal(C)$ over $C$]:
   $
-    dim(C in cal(C)). & SliceO(C, cal(C))(C) = limits(union)_(X in cal(C)) cal(C)(X,C) = cal(C)(-,C) \
-                  and & SliceO(C, cal(C))(C))(f dim(in cal(C)(X,C)),g dim(in cal(C)(Y,C))) = { h | g h = f}
+    dim(C in cal(C)). & SliceO(C, cal(C))(C) &= limits(union)_(X in cal(C)) cal(C)(X,C) \
+    and & SliceO(C, cal(C))(C))(f dim(in cal(C)(X,C)),g dim(in cal(C)(Y,C))) &= { h | g h = f}
   $
   #figure(
     table(
@@ -477,55 +477,86 @@
 
 #theorem(
   name: "Slice Categories are not necessarily Posetal",
-)[
+)[Let $h, h' in SliceO(C, cal(C))(f,g)$. Although composition is unique, it is unique for both operands. i.e. $forall f, g. exists! g f$. However, here it varies: $g h = f$, $g h' = f$ where $h != h'$. Compositions are unique, but "decompositions" (of $f$) are not necessarily. Thus, slice categories are not necessarily posetal, since theres more than one unique morphism.
   $
-    dim(exists cal(C)\, C in cal(C).) not Thin(SliceU(C, cal(C))) \
-    dim(exists cal(C)\, C in cal(C).) not Thin(SliceO(C, cal(C))) \
+    exists cal(C)dim(\, C in cal(C).) not Thin(SliceU(C, cal(C))) \
+    exists cal(C)dim(\, C in cal(C).) not Thin(SliceO(C, cal(C))) \
   $
 ]
 
-#proof[Let $h, h' in SliceO(C, cal(C))(f,g)$. Although composition is unique, it is unique for both operands. i.e. $forall f, g. exists! g f$. However, here it varies: $g h = f$, $g h' = f$ where $h != h'$. Compositions are unique, but "decompositions" (of $f$) are not necessarily. Thus, slice categories are not necessarily posetal, since theres more than one unique morphism.
-  $
-    dim(exists cal(C). forall h\, h' in SliceO(C, cal(C))(f,g).) & h f = h' f = g and h != h'   &        text("premise") \
-                                                              => & |SliceO(C, cal(C))(f,g)| > 1 & #ref(<slice-category>) \
-                                                              => & not Thin(SliceO(C, cal(C)))  &  #ref(<thin-category>) \
-    dim(exists cal(C). forall h\, h' in SliceU(C, cal(C))(f,g).) & f h = f h' = g and h != h'   &        text("premise") \
-                                                              => & |SliceU(C, cal(C))(f,g)| > 1 & #ref(<slice-category>) \
-                                                              => & not Thin(SliceU(C, cal(C)))  &  #ref(<thin-category>)
-  $
+#proof[
+  For $SliceU(C, cal(C))$, we let $C = X = Y = { star , star'} = 2$ and $f = g = h' = hat(star)$ where $hat(star)$ is a constant function returning $star$. Let $h = id$ the identity morphism. We can see that $h f = g$ and $h' f = g$. Since $h != h'$, there is more than one morphism from $X$ to $Y$. Thus $SliceU(C, cal(C))$ is not posetal.
 
+  Let $2 = { star, star' }, 
+    dim(forall x in 2.) id(x) = x,
+    dim(forall x in 2.) hat(star)(x) = star$
   #figure(
     table(
+      stroke: none,
+      columns: (auto, auto, auto),
       align: center + horizon,
-      columns: (auto, auto),
-      stroke: 0.5pt,
+      [
+        $
+             & SliceU(C, cal(C))(f,g) = { h, h' } \
+          => & not Thin(SliceU(C, cal(C)))        & #ref(<thin-category>)
+        $
+      ],
       diagram({
         let C = (0, 0)
         let X = (1, 0)
         let Y = (1, 1)
-        node(C, $C$)
-        node(X, $X$)
-        node(Y, $Y$)
-        edge(X, "->", C)[$f$]
-        edge(Y, "->", C, label-side: left)[$g$]
-        edge(X, "-->", Y, bend: 10deg)[$h$]
-        edge(X, "-->", Y, bend: -10deg)[$h'$]
+        node(C, $2$)
+        node(X, $2$)
+        node(Y, $2$)
+        edge(C, "->", X)[$hat(star)$]
+        edge(C, "->", Y, label-side: right)[$hat(star)$]
+        edge(X, "->", Y, bend: 10deg)[$hat(star)$]
+        edge(X, "->", Y, bend: -10deg)[$id$]
       }),
       diagram({
-        let C = (0, 0)
-        let X = (1, 0)
-        let Y = (1, 1)
-        node(C, $C$)
-        node(X, $X$)
-        node(Y, $Y$)
-        edge(C, "->", X)[$f$]
-        edge(C, "->", Y, label-side: right)[$g$]
-        edge(X, "-->", Y, bend: 10deg)[$h$]
-        edge(X, "-->", Y, bend: -10deg)[$h'$]
+        let f = (0, 0)
+        let g = (1, 0)
+        node(f, $hat(star)$)
+        node(g, $hat(star)$)
+        edge(f, "->", g, bend: 10deg)[$hat(star)$]
+        edge(f, "->", g, bend: -10deg)[$id$]
       }),
     ),
   )
-  Note that dashed arrows indicate unique morphisms.
+  Similarly for $SliceO(C, cal(C))$.
+  #figure(
+    table(
+      stroke: none,
+      columns: (auto, auto, auto),
+      align: center + horizon,
+      [
+        $
+             & SliceO(C, cal(C))(f,g) = { h, h' } \
+          => & not Thin(SliceU(C, cal(C)))        & #ref(<thin-category>)
+        $
+      ],
+      diagram({
+        let C = (0, 0)
+        let X = (1, 0)
+        let Y = (1, 1)
+        node(C, $2$)
+        node(X, $2$)
+        node(Y, $2$)
+        edge(C, "<-", X)[$hat(star)$]
+        edge(C, "<-", Y, label-side: right)[$hat(star)$]
+        edge(X, "->", Y, bend: 10deg)[$hat(star)$]
+        edge(X, "->", Y, bend: -10deg)[$id$]
+      }),
+      diagram({
+        let f = (0, 0)
+        let g = (1, 0)
+        node(f, $hat(star)$)
+        node(g, $hat(star)$)
+        edge(f, "->", g, bend: 10deg)[$hat(star)$]
+        edge(f, "->", g, bend: -10deg)[$id$]
+      }),
+    ),
+  )
 ] <slice-not-thin>
 
 #definition(name: "Opposite Category")[The category with all morphisms domain and codomain swapped

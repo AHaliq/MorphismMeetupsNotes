@@ -1,19 +1,6 @@
-#import "@preview/equate:0.3.2": equate
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
-#import "0-preamble.typ": definition, init, notation, proof, theorem
-
+#import "0-preamble.typ": *
 #show: init
-
-// equate ----------------------------------
-
-#show: equate.with(breakable: true, sub-numbering: true)
-#set math.equation(numbering: "(1.1)")
-
-// lemmify ---------------------------------
-
-#let dim(x) = text(fill: gray, $#x$)
-
-// end of preamble -------------------------
 
 = Categories, Functors and Naturality
 
@@ -94,7 +81,7 @@
 
 #notation(
   name: "Morphisms",
-)[We notate morphisms differently depending on context. Hom notation makes the category explicit. Type theoretic notation when the underlying category is clear. Algebra notation for proof writing. The rest for brevity and visual clarity.
+)[We notate morphisms differently depending on context. Hom notation makes the category explicit. Type theoretic notation when the underlying category is clear. Algebraic notation for proof writing. Commutative diagram notation for visual intuition.
   #figure(
     table(
       columns: (auto, auto, auto, auto),
@@ -288,8 +275,11 @@
       }),
     ),
   )
-  Note that we can duplicate objects in the diagram for clarity; there is only one $X$ still.
 ]
+
+#notation(
+  name: "Duplicate Objects",
+)[Note that we can duplicate objects in the diagram for clarity. e.g. In the above diagram there is only one unique $X$ object in the category.]
 
 #definition(
   name: "Subcategory",
@@ -305,7 +295,7 @@
   name: "Slice Categories",
 )[A slice category of the underlying category $cal(C)$ fixes some object $C in cal(C)$. The slice category under $C$ has objects as morphisms from $C$. Similarly the slice category over $C$ has objects as morphisms to $C$.
 
-  #smallcaps[$SliceU(C, cal(C))$ slice category of $cal(C)$ under $C$:]
+  #align(center)[#smallcaps[$SliceU(C, cal(C))$ slice category of $cal(C)$ under $C$]]
   #figure(
     grid(
       columns: (auto, auto),
@@ -338,7 +328,7 @@
     ),
   )
 
-  #smallcaps[$SliceO(C, cal(C))$ slice category of $cal(C)$ over $C$]:
+  #align(center)[#smallcaps[$SliceO(C, cal(C))$ slice category of $cal(C)$ over $C$]]
 
   #figure(
     grid(
@@ -374,7 +364,7 @@
   )
 ] <slice-category>
 
-#proof[The slice category under $C$ is a category because for every object $f: C -> X$ the identity is $1_f = 1_X$. Composition exists by virtue that the objects are morphisms that are composable (and associative) in the underlying category. The unital property holds similarly.
+#proof[$SliceU(C, cal(C))$ is a category because for every object $f: C -> X$ the identity is $1_f = 1_X$. Composition exists by virtue that the objects are morphisms that are composable (and associative) in the underlying category. The unital property holds similarly.
   $
     Category(SliceU(C, cal(C))) =& forall f mat(delim: #none, in, cal(C)(C,X); in, SliceU(C, cal(C))). 1_f dim(in SliceU(C, cal(C))(f,f)) = 1_X dim(in cal(C)(X,X)) \
     and& forall h mat(delim: #none, in, cal(C)(X,Y); in, SliceU(C, cal(C))(f,g)), j mat(delim: #none, in, cal(C)(Y,Z); in, SliceU(C, cal(C))(g,i)). j h in mat(delim: #none, in, cal(C)(X,Z); in, SliceU(C, cal(C))(f,i)) \
@@ -423,7 +413,7 @@
   )
 ]
 
-#proof[Likewise for the slice category over $C$, for every object $f: X -> C$ the identity is $1_f = 1_X$. Associative composition and unital properties hold by the same argument.
+#proof[Likewise in $SliceO(C, cal(C))$, for every object $f: X -> C$ the identity is $1_f = 1_X$. Associative composition and unital properties hold by the same argument.
   $
     Category(SliceO(C, cal(C))) =& forall f mat(delim: #none, in, cal(C)(X,C); in, SliceO(C, cal(C))). 1_f dim(in SliceO(C, cal(C))(f,f)) = 1_X in cal(C)(X,X) \
     and& forall h mat(delim: #none, in, cal(C)(X,Y); in, SliceO(C, cal(C))(f,g)), j mat(delim: #none, in, cal(C)(Y,Z); in, SliceO(C, cal(C))(g,i)). j h in mat(delim: #none, in, cal(C)(X,Z); in, SliceO(C, cal(C))(f,i)) \
@@ -618,7 +608,7 @@
 )[If $X attach(>->, t: f) Y$ is monic, there is an injective map $f_*$ of morphisms from any $Z$ to $X$ to morphisms from $Z$ to $Y$ i.e. if $f_*(h) = g$ and $f_*(k) = g$ then $h = k$ where $f h = f k = g$.
 
   $
-    dim(forall cal(C).) Monic(f dim(in cal(C)(X,Y))) => exists f_* : cal(C)(Z,X) arrow.hook cal(C)(Z,Y).
+    Monic(f dim(in cal(C)(X,Y))) => exists f_* : cal(C)(Z,X) arrow.hook cal(C)(Z,Y).
   $
 ]
 
@@ -662,7 +652,7 @@
 )[If $Y attach(->>, t: f) X$ is epic, there is an injective map $f^*$ of morphisms from $X$ to any $Z$ to morphisms from $Y$ to $Z$ i.e. if $f^*(h) = g$ and $f^*(k) = g$ then $h = k$ where $h f = k f = g$.
 
   $
-    dim(forall cal(C).) Epic(f dim(in cal(C)(Y,X))) => exists f^* : cal(C)(X,Z) arrow.hook cal(C)(Y,Z).
+    Epic(f dim(in cal(C)(Y,X))) => exists f^* : cal(C)(X,Z) arrow.hook cal(C)(Y,Z).
   $
 ]
 
@@ -703,7 +693,33 @@
   name: "Sections are Monic, Retractions are Epic",
 )[Sections are monomorphisms and retractions are epimorphisms. We call them _split monomorphisms_ and _split epimorphisms_ respectively to emphasize this property.
   $
-    dim(forall cal(C).) Section(s dim(in cal(C)(X,Y)), r dim(in cal(C)(Y,X))) => Monic(s) and Epic(r)
+    Section(s dim(in cal(C)(X,Y)), r dim(in cal(C)(Y,X))) => Monic(s) and Epic(r)
+  $
+]
+
+#proof(
+  name: "Sections are Monic",
+)[
+  Let $s in cal(C)(X,Y)$ be a section to $r in cal(C)(Y,X)$ such that $r s = 1_X$. We show that $s$ is monic. Suppose that $s h = s k$ we show that $h = k$. Composing with $r$ we get that $r s h = r s k$ and so $1_X h = 1_X k$. By the unital property of identity morphisms, $1_X h = h$ and likewise $1_X k = k$. Thus, $h = k$ concluding that $s$ is monic.
+  $
+    Section(s, r) = & (r s = 1_X)                             & #ref(<section>) #<sections-are-monic-1> \
+                 => & forall h, k. s h = s k                  &                         text("premise") \
+                  = & forall h, k. s h = s k => s h = s k     &                   text("idempotent") => \
+                  = & forall h, k. s h = s k => r s h = r s k &                     #ref(<composition>) \
+                  = & forall h, k. s h = s k => 1_X h = 1_X k &            #ref(<sections-are-monic-1>) \
+                  = & forall h, k. s h = s k => h = k         &                          #ref(<unital>) \
+                  = & Monic(s)                                &                    #ref(<monomorphism>)
+  $
+
+  Let $r in cal(C)(Y,X)$ be a retraction to $s in cal(C)(X,Y)$ such that $r s = 1_X$. We show that $r$ is epic. Suppose that $i r = j r$ we show that $i = j$. Pre-composing with $s$ we get that $i r s = j r s$ and so $i 1_X = j 1_X$. By the unital property of identity morphisms, $i 1_X = i$ and likewise $j 1_X = j$. Thus, $i = j$ concluding $r$ is epic.
+  $
+    Section(s, r) = & (r s = 1_X)                            & #ref(<section>) #<retractions-are-epic-1> \
+                 => & forall i, j. i r = j r                 &                           text("premise") \
+                  = & forall i,j. i r = j r => i r = j r     &                     text("idempotent") => \
+                  = & forall i,j. i r = j r => i r s = j r s &                       #ref(<composition>) \
+                  = & forall i,j. i r = j r => i 1_X = j 1_X &            #ref(<retractions-are-epic-1>) \
+                  = & forall i,j. i r = j r => i = j         &                            #ref(<unital>) \
+                  = & Epic(r)                                &                       #ref(<epimorphism>)
   $
   #figure(
     table(
@@ -719,56 +735,28 @@
         edge(X, ">->", Y, bend: 30deg)[$s$]
         edge(Y, "->>", X, bend: 30deg)[$r$]
         edge(X, "->", X, bend: -130deg, loop-angle: 90deg)[$1_X=r s$]
-        edge(W, "->", X, bend: 0deg, label-side: center)[$h$]
-        edge(W, "->", X, bend: -30deg, label-side: center)[$k$]
-        edge(X, "->", Z, bend: -30deg, label-side: center)[$i$]
-        edge(X, "->", Z, bend: 0deg, label-side: center)[$j$]
+        edge(W, "->", X, bend: 0deg, label-side: center, label-fill: proof-col)[$h$]
+        edge(W, "->", X, bend: -30deg, label-side: center, label-fill: proof-col)[$k$]
+        edge(X, "->", Z, bend: -30deg, label-side: center, label-fill: proof-col)[$i$]
+        edge(X, "->", Z, bend: 0deg, label-side: center, label-fill: proof-col)[$j$]
         edge(W, "->", Y, bend: 40deg)[$s h = s k$]
         edge(Y, "->", Z, bend: 40deg)[$i r = j r$]
       }),
     ),
   )
-]
-
-#proof(
-  name: "Sections are Monic",
-)[
-  $
-    dim(forall cal(C).) Section(s dim(in cal(C)(X,Y)), r dim(in cal(C)(Y,X))) => Monic(s)
-  $
-  Let $s in cal(C)(X,Y)$ be a section to $r in cal(C)(Y,X)$ such that $r s = 1_X$. We show that $s$ is monic. Suppose that $s h = s k$ we show that $h = k$. Composing with $r$ we get that $r s h = r s k$ and so $1_X h = 1_X k$. By the unital property of identity morphisms, $1_X h = h$ and likewise $1_X k = k$. Thus, $h = k$ concluding that $s$ is monic.
-  $
-    Section(s, r) = & (r s = 1_X)                             & #ref(<section>) #<sections-are-monic-1> \
-                 => & forall h, k. s h = s k                  &                         text("premise") \
-                  = & forall h, k. s h = s k => s h = s k     &                   text("idempotent") => \
-                  = & forall h, k. s h = s k => r s h = r s k &                     #ref(<composition>) \
-                  = & forall h, k. s h = s k => 1_X h = 1_X k &            #ref(<sections-are-monic-1>) \
-                  = & forall h, k. s h = s k => h = k         &                          #ref(<unital>) \
-                  = & Monic(s)                                &                    #ref(<monomorphism>)
-  $
-] <sections-are-monic>
-
-#proof(
-  name: "Retractions are Epic",
-)[
-  $
-    dim(forall cal(C).) Section(s dim(in cal(C)(X,Y)), r dim(in cal(C)(Y,X))) => Epic(r)
-  $
-  Let $r in cal(C)(Y,X)$ be a retraction to $s in cal(C)(X,Y)$ such that $r s = 1_X$. We show that $r$ is epic. Suppose that $i r = j r$ we show that $i = j$. Pre-composing with $s$ we get that $i r s = j r s$ and so $i 1_X = j 1_X$. By the unital property of identity morphisms, $i 1_X = i$ and likewise $j 1_X = j$. Thus, $i = j$ concluding $r$ is epic.
-  $
-    Section(s, r) = & (r s = 1_X)                            & #ref(<section>) #<retractions-are-epic-1> \
-                 => & forall i, j. i r = j r                 &                           text("premise") \
-                  = & forall i,j. i r = j r => i r = j r     &                     text("idempotent") => \
-                  = & forall i,j. i r = j r => i r s = j r s &                       #ref(<composition>) \
-                  = & forall i,j. i r = j r => i 1_X = j 1_X &            #ref(<retractions-are-epic-1>) \
-                  = & forall i,j. i r = j r => i = j         &                            #ref(<unital>) \
-                  = & Epic(r)                                &                       #ref(<epimorphism>)
-  $
-] <retractions-are-epic>
+] <sections-are-monic-retractions-are-epic>
 
 #theorem(name: "Isomorphisms are Monic and Epic")[
   $
-    dim(forall cal(C).) Iso(f dim(in cal(C)(X,Y))) => Monic(f) and Epic(f)
+    Iso(f dim(in cal(C)(X,Y))) => Monic(f) and Epic(f)
+  $
+]
+
+#proof[Let $f in cal(C)(X,Y)$ be an isomorphism with the inverse $g in cal(C)(Y,X)$. Thus, $f$ is a section to $g$ when $X$ is the retract since $g f = 1_X$. Moreover, $f$ is a retraction to $g$ when $Y$ is the retract since $f g = 1_Y$. Since sections are monic and retractions are epic, $f$ is both monic and epic.
+  $
+    Iso(f) = & (exists g. g f = 1_X and f g = 1_Y)       &                             #ref(<isomorphism>) \
+           = & exists g. Section(f, g) and Section(g, f) &                                 #ref(<section>) \
+          => & Monic(f) and Epic(f)                      & #ref(<sections-are-monic-retractions-are-epic>)
   $
   #figure(
     table(
@@ -785,23 +773,15 @@
         edge(Y, "->", X, bend: 30deg)[$g$]
         edge(X, "->", X, bend: -130deg, loop-angle: -90deg)[$1_X=g f$]
         edge(Y, "->", Y, bend: -130deg, loop-angle: 90deg)[$1_Y=f g$]
-        edge(W, "->", X, bend: 20deg, label-side: center)[$h$]
-        edge(W, "->", X, bend: -20deg, label-side: center)[$k$]
-        edge(Y, "->", Z, bend: 20deg, label-side: center)[$i$]
-        edge(Y, "->", Z, bend: -20deg, label-side: center)[$j$]
-        edge(W, "->", Y, bend: 80deg)[$f h = f k$]
-        edge(X, "->", Z, bend: -80deg)[$i f = j f$]
+        edge(W, "->", X, bend: 20deg, label-side: left)[$h$]
+        edge(W, "->", X, bend: -20deg, label-side: right)[$k$]
+        edge(Y, "->", Z, bend: 20deg, label-side: left)[$i$]
+        edge(Y, "->", Z, bend: -20deg, label-side: right)[$j$]
+        edge(W, "->", Y, bend: 75deg)[$f h = f k$]
+        edge(X, "->", Z, bend: -75deg)[$i f = j f$]
       }),
     ),
   )
-]
-
-#proof[Let $f in cal(C)(X,Y)$ be an isomorphism with the inverse $g in cal(C)(Y,X)$. Thus, $f$ is a section to $g$ when $X$ is the retract since $g f = 1_X$. Moreover, $f$ is a retraction to $g$ when $Y$ is the retract since $f g = 1_Y$. Since sections are monic and retractions are epic, $f$ is both monic and epic.
-  $
-    Iso(f) = & (exists g. g f = 1_X and f g = 1_Y)       &          #ref(<isomorphism>) \
-           = & exists g. Section(f, g) and Section(g, f) &              #ref(<section>) \
-          => & Monic(f) and Epic(f)                      & #ref(<retractions-are-epic>)
-  $
 ] <isomorphisms-are-monic-and-epic>
 
 #theorem(name: "Isomorphism Inverse are unique")[
@@ -812,12 +792,12 @@
 
 #proof[Let $f$ be an isomorphism with two inverses $g, h$. It must be that $g = h$ since $f$ is monic or epic.
   $
-    Iso(f) => & Monic(f)                                         & #ref(<isomorphisms-are-monic-and-epic>) \
-            = & forall a, b. f a = f b => a = b                  &         #ref(<monomorphism>) #<iso-inv-unique-1> \
-           => & exists g. g f = 1_X and f g = 1_Y                &                     #ref(<isomorphism>) \
-            = & exists g, h. g f = h f = 1_X and f g = f h = 1_Y &                         text("premise") \
-           => & exists g, h. f g = f h => g = h                  &                         #ref(<iso-inv-unique-1>) \
-           => & exists! g. g f = 1_X and f g = 1_Y               &                   text("intro") exists!
+    Iso(f) => & Monic(f)                                         &  #ref(<isomorphisms-are-monic-and-epic>) \
+            = & forall a, b. f a = f b => a = b                  & #ref(<monomorphism>) #<iso-inv-unique-1> \
+           => & exists g. g f = 1_X and f g = 1_Y                &                      #ref(<isomorphism>) \
+            = & exists g, h. g f = h f = 1_X and f g = f h = 1_Y &                          text("premise") \
+           => & exists g, h. f g = f h => g = h                  &                 #ref(<iso-inv-unique-1>) \
+           => & exists! g. g f = 1_X and f g = 1_Y               &                    text("intro") exists!
   $
 ] <iso-inv-unique>
 
@@ -825,31 +805,34 @@
 #let Cat = $text("Cat")$;
 #definition(name: "Functor")[
   Maps between categories that are _left total_ and _preserves_ composition and identity.
-  $
-    F : & cal(C) -> cal(D) \
-    Functor(F) := & forall X in cal(C). F X in cal(D) #<functor-obj-left-total> \
-    and & forall f in cal(C)(X,Y). F(f) in cal(D)(F X,F Y) & text("Left Total") #<functor-mor-left-total> \
-    and & forall f in cal(C)(X,Y), g in cal(C)(Y,Z). F(g f) = F(g) F(f) & text("Composition") #<functor-preserves-composition> \
-    and & forall X in cal(C). F(1_X) = 1_(F X) & text("Identity") #<functor-preserves-identity> \
-  $
 
   #figure(
-    table(
-      diagram({
-        let X = (0, 0)
-        let Y = (0, 1)
-        node(X, $X$)
-        node(Y, $Y$)
-        edge(X, "->", Y)[$f$]
+    grid(
+      columns: (auto, auto),
+      $
+        &Functor(F : cal(C) -> cal(D)) \
+        := & forall X in cal(C). F X in cal(D) #<functor-obj-left-total> \
+        and & forall f in cal(C)(X,Y). F(f) in cal(D)(F X,F Y) & text("Left Total") #<functor-mor-left-total> \
+        and & forall f in cal(C)(X,Y), g in cal(C)(Y,Z). F(g f) = F(g) F(f) & text("Composition") #<functor-preserves-composition> \
+        and & forall X in cal(C). F(1_X) = 1_(F X) & text("Identity") #<functor-preserves-identity> \
+      $,
+      table(
+        diagram({
+          let X = (0, 0)
+          let Y = (0, 1)
+          node(X, $X$)
+          node(Y, $Y$)
+          edge(X, "->", Y)[$f$]
 
-        let FX = (1, 0)
-        let FY = (1, 1)
-        node(FX, $F X$)
-        node(FY, $F Y$)
-        edge(FX, "->", FY, label-side: left)[$F(f)$]
+          let FX = (0.5, 0)
+          let FY = (0.5, 1)
+          node(FX, $F X$)
+          node(FY, $F Y$)
+          edge(FX, "->", FY, label-side: left)[$F(f)$]
 
-        edge((0.25, 0.5), "=>", (0.75, 0.5))[$F$]
-      }),
+          edge((0.1, 0.5), "=>", (0.4, 0.5))[$F$]
+        }),
+      ),
     ),
   )
 ] <functor>
@@ -873,34 +856,30 @@
     => & Functor(-^op : cal(C) -> cal(C)^op) & #ref(<functor>) \
   $
   #figure(
-    grid(
+    table(
       columns: (auto, auto),
-      table(
-        diagram({
-          let X = (0, 1)
-          let Y = (0, 0)
-          let Z = (1, 0)
-          node(X, $X$)
-          node(Y, $Y$)
-          node(Z, $Z$)
-          edge(X, "->", Y)[$f$]
-          edge(Y, "->", Z)[$g$]
-          edge(X, "->", Z, label-side: right)[$g f$]
-        }),
-      ),
-      table(
-        diagram({
-          let X = (0, 1)
-          let Y = (0, 0)
-          let Z = (1, 0)
-          node(X, $X$)
-          node(Y, $Y$)
-          node(Z, $Z$)
-          edge(X, "<-", Y)[$f^op$]
-          edge(Y, "<-", Z)[$g^op$]
-          edge(X, "<-", Z, label-side: right)[$(g f)^op = f^op g^op$]
-        }),
-      ),
+      diagram({
+        let X = (0, 1)
+        let Y = (0, 0)
+        let Z = (1, 0)
+        node(X, $X$)
+        node(Y, $Y$)
+        node(Z, $Z$)
+        edge(X, "->", Y)[$f$]
+        edge(Y, "->", Z)[$g$]
+        edge(X, "->", Z, label-side: right)[$g f$]
+      }),
+      diagram({
+        let X = (0, 1)
+        let Y = (0, 0)
+        let Z = (1, 0)
+        node(X, $X$)
+        node(Y, $Y$)
+        node(Z, $Z$)
+        edge(X, "<-", Y)[$f^op$]
+        edge(Y, "<-", Z)[$g^op$]
+        edge(X, "<-", Z, label-side: right)[$(g f)^op = f^op g^op$]
+      }),
     ),
   )
 ]
@@ -991,12 +970,23 @@
 
 #proof[Since functors preserve composition and identity, $F(r) F(s) = 1_(F X)$ holds when $r s = 1_X$. This makes $F(r)$ a retraction to $F(s)$ over the retract $F X$. Since sections are split monomorphisms and retractions are split epimorphisms, so are $F(s)$ and $F(r)$ respectively.
   $
-    Section(s, r) = & (r s = 1_X)                &                       #ref(<section>) \
-                 => & F(r) F(s) = F(1_X)         & #ref(<functor-preserves-composition>) \
-                  = & (F(r) F(s) = 1_(F X))      &    #ref(<functor-preserves-identity>) \
-                  = & Section(F(s), F(r))        &                       #ref(<section>) \
-                 => & Monic(F(s)) and Epic(F(r)) &            #ref(<sections-are-monic>)
+    Section(s, r) = & (r s = 1_X)                &                                 #ref(<section>) \
+                 => & F(r) F(s) = F(1_X)         &           #ref(<functor-preserves-composition>) \
+                  = & (F(r) F(s) = 1_(F X))      &              #ref(<functor-preserves-identity>) \
+                  = & Section(F(s), F(r))        &                                 #ref(<section>) \
+                 => & Monic(F(s)) and Epic(F(r)) & #ref(<sections-are-monic-retractions-are-epic>)
   $
+]
+
+#summary[
+
+  TODO
+
+  - Categories model mathematical structures; syntax, e.g. $Set$
+  - Categories can express its own meta-theories; semantics, e.g. slice category functor
+  - Uniqueness of morphisms is determined by composition, hom sets and unital property
+
+  definition dependency graph
 ]
 
 - product category

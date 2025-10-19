@@ -477,87 +477,98 @@
 
 #theorem(
   name: "Slice Categories are not necessarily Posetal",
-)[Let $h, h' in SliceO(C, cal(C))(f,g)$. Although composition is unique, it is unique for both operands. i.e. $forall f, g. exists! g f$. However, here it varies: $g h = f$, $g h' = f$ where $h != h'$. Compositions are unique, but "decompositions" (of $f$) are not necessarily. Thus, slice categories are not necessarily posetal, since theres more than one unique morphism.
+)[
   $
     exists cal(C)dim(\, C in cal(C).) not Thin(SliceU(C, cal(C))) \
     exists cal(C)dim(\, C in cal(C).) not Thin(SliceO(C, cal(C))) \
   $
 ]
 
-#proof[
-  For $SliceU(C, cal(C))$, we let $C = X = Y = { star , star'} = 2$ and $f = g = h' = hat(star)$ where $hat(star)$ is a constant function returning $star$. Let $h = id$ the identity morphism. We can see that $h f = g$ and $h' f = g$. Since $h != h'$, there is more than one morphism from $X$ to $Y$. Thus $SliceU(C, cal(C))$ is not posetal.
+#proof[The intuition is that composition is unique for the same operands by #ref(<composition-unique>). But we can vary the operand(s), even if the resulting composition is the same morphism. e.g. $h f = k f = g$ even when $h != k$. i.e. a morphism can be factored non-uniquely. Thus, if our slice category has objects $g$ and $f$ such that $h$ and $k$ are distinct factors of $g$ through $f$, then the slice category is not thin.
 
-  Let $2 = { star, star' }, 
-    dim(forall x in 2.) id(x) = x,
-    dim(forall x in 2.) hat(star)(x) = star$
+  We construct the category $cal(C)$ as follows such that the slice category under one of its object has two morphisms $h,k$ in the same hom set.
+  $
+        & cal(C) = { C, X, Y } \
+     => & dim(forall X in cal(C).) cal(C)(X,X) = {1_X} and 1_X 1_X = 1_X \
+     => & cal(C)(C,X) = { f } and cal(C)(C,Y) = { g } and cal(C)(X,Y) = { h, k } \
+     => & 1_X f = f = f 1_C and 1_Y g = g = g 1_C and h != k \
+    and & 1_Y h = h = h 1_X and 1_Y k = k = k 1_X and h f = k f = g \
+     => & Category(cal(C))                                                       &       #ref(<category>) \
+     => & Category(SliceU(C, cal(C)))                                            & #ref(<slice-category>) \
+     => & cal(C)(X,Y) = SliceU(C, cal(C))(f,g) = {h, k}
+          => not Thin(SliceU(C, cal(C)))                                         &  #ref(<thin-category>) \
+     => & exists cal(C). dim(C in cal(C).) not Thin(SliceU(C, cal(C)))           &   text("intro") exists
+  $
   #figure(
     table(
-      stroke: none,
-      columns: (auto, auto, auto),
       align: center + horizon,
-      [
-        $
-             & SliceU(C, cal(C))(f,g) = { h, h' } \
-          => & not Thin(SliceU(C, cal(C)))        & #ref(<thin-category>)
-        $
-      ],
+      columns: (auto, auto),
+      stroke: 0.5pt,
       diagram({
         let C = (0, 0)
         let X = (1, 0)
         let Y = (1, 1)
-        node(C, $2$)
-        node(X, $2$)
-        node(Y, $2$)
-        edge(C, "->", X)[$hat(star)$]
-        edge(C, "->", Y, label-side: right)[$hat(star)$]
-        edge(X, "->", Y, bend: 10deg)[$hat(star)$]
-        edge(X, "->", Y, bend: -10deg)[$id$]
+        node(C, $C$)
+        node(X, $X$)
+        node(Y, $Y$)
+        edge(C, "->", X)[$f$]
+        edge(C, "->", Y, label-side: right)[$g$]
+        edge(X, "->", Y, bend: 10deg)[$h$]
+        edge(X, "->", Y, bend: -10deg)[$k$]
       }),
       diagram({
         let f = (0, 0)
-        let g = (1, 0)
-        node(f, $hat(star)$)
-        node(g, $hat(star)$)
-        edge(f, "->", g, bend: 10deg)[$hat(star)$]
-        edge(f, "->", g, bend: -10deg)[$id$]
+        let g = (0, 1)
+        node(f, $f$)
+        node(g, $g$)
+        edge(f, "->", g, bend: 10deg)[$h$]
+        edge(f, "->", g, bend: -10deg)[$k$]
       }),
     ),
   )
-  Similarly for $SliceO(C, cal(C))$.
+]
+
+#proof[Similarly, we construct the category $cal(C)$ for the slice category over as well.
+  $
+        & cal(C) = { C, X, Y } \
+     => & dim(forall X in cal(C).) cal(C)(X,X) = { 1_X } and 1_X 1_X = 1_X \
+     => & cal(C)(X,C) = { f } and cal(C)(Y,C) = { g } and cal(C)(X,Y) = { h, k } \
+     => & 1_C f = f = f 1_X and 1_C g = g = g 1_Y and h != k \
+    and & 1_Y h = h = h 1_X and 1_Y k = k = k 1_X and g h = g k = f \
+     => & Category(cal(C))                                                       &       #ref(<category>) \
+     => & Category(SliceO(C, cal(C)))                                            & #ref(<slice-category>) \
+     => & cal(C)(X,Y) = SliceO(C, cal(C))(f,g) = {h, k}
+          => not Thin(SliceO(C, cal(C)))                                         &  #ref(<thin-category>) \
+     => & exists cal(C). dim(C in cal(C).) not Thin(SliceO(C, cal(C)))           &   text("intro") exists
+  $
   #figure(
     table(
-      stroke: none,
-      columns: (auto, auto, auto),
       align: center + horizon,
-      [
-        $
-             & SliceO(C, cal(C))(f,g) = { h, h' } \
-          => & not Thin(SliceU(C, cal(C)))        & #ref(<thin-category>)
-        $
-      ],
+      columns: (auto, auto),
+      stroke: 0.5pt,
       diagram({
         let C = (0, 0)
         let X = (1, 0)
         let Y = (1, 1)
-        node(C, $2$)
-        node(X, $2$)
-        node(Y, $2$)
-        edge(C, "<-", X)[$hat(star)$]
-        edge(C, "<-", Y, label-side: right)[$hat(star)$]
-        edge(X, "->", Y, bend: 10deg)[$hat(star)$]
-        edge(X, "->", Y, bend: -10deg)[$id$]
+        node(C, $C$)
+        node(X, $X$)
+        node(Y, $Y$)
+        edge(X, "->", C)[$f$]
+        edge(Y, "->", C, label-side: left)[$g$]
+        edge(X, "->", Y, bend: 10deg)[$h$]
+        edge(X, "->", Y, bend: -10deg)[$k$]
       }),
       diagram({
         let f = (0, 0)
-        let g = (1, 0)
-        node(f, $hat(star)$)
-        node(g, $hat(star)$)
-        edge(f, "->", g, bend: 10deg)[$hat(star)$]
-        edge(f, "->", g, bend: -10deg)[$id$]
+        let g = (0, 1)
+        node(f, $f$)
+        node(g, $g$)
+        edge(f, "->", g, bend: 10deg)[$h$]
+        edge(f, "->", g, bend: -10deg)[$k$]
       }),
     ),
   )
-] <slice-not-thin>
+]<slice-not-thin>
 
 #definition(name: "Opposite Category")[The category with all morphisms domain and codomain swapped
   $

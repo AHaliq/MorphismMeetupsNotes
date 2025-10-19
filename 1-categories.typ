@@ -1,9 +1,8 @@
 #import "@preview/equate:0.3.2": equate
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
-#import "0-preamble.typ": definition, proof, style, theorem, thm-rules
+#import "0-preamble.typ": definition, init, notation, proof, theorem
 
-#show: thm-rules
-#show: style
+#show: init
 
 // equate ----------------------------------
 
@@ -25,20 +24,6 @@
 #let Mor = $text("Mor")$;
 #let dom(x) = $text("dom")(#x)$
 #let cod(x) = $text("cod")(#x)$
-#definition(name: "Morphisms")[
-  A morphism (or _arrow_) $f$ is a directed edge from a _domain_ object $X$ to a _codomain_ object $Y$. We can notate them as follows:
-  #figure(
-    table(
-      align: center + horizon,
-      columns: (auto, auto, auto, auto),
-      row-gutter: (2pt, auto),
-      stroke: 0.5pt,
-      inset: 7pt,
-      [hom], [type], [diagram], [algebra],
-      $f in cal(C)(X,Y)$, $f: X -> Y$, $X attach(->, t: f) Y$, $dom(f) = X, cod(f) = Y$,
-    ),
-  )
-]
 
 #definition(
   name: "Category",
@@ -50,7 +35,6 @@
     &and forall f dim(in cal(C)(X,Y)). 1_Y f = f = f 1_X & text("Unital") #<unital> \
     &and forall f dim(in cal(C)(X,Y)), g dim(in cal(C)(Y,Z)), h dim(in cal(C)(Z,W)). h (g f) = (h g) f & text("Assoc") #<associative>
   $
-  When $cal(C)(X,Y)$ has $X$ and $Y$ unquantified, it notates them implicitly; $forall X,Y in cal(C). cal(C)(X,Y)$. We also notate $cal(C)$ for ${ X | X in cal(C)}$ and $Mor(cal(C))$ for $union_(X,Y in cal(C)) cal(C)(X,Y)$
   #figure(
     table(
       align: horizon + center,
@@ -109,6 +93,27 @@
     ),
   )
 ] <category>
+
+#notation(
+  name: "Morphisms",
+)[We notate morphisms differently depending on context. Hom notation makes the category explicit. Type theoretic notation when the underlying category is clear. Algebra notation for proof writing. The rest for brevity and visual clarity.
+  #figure(
+    table(
+      align: center + horizon,
+      columns: (auto, auto, auto, auto),
+      row-gutter: (2pt, auto),
+      stroke: 0.5pt,
+      inset: 7pt,
+      [hom], [type], [diagram], [algebra],
+      $f in cal(C)(X,Y)$, $f: X -> Y$, $X attach(->, t: f) Y$, $dom(f) = X, cod(f) = Y$,
+    ),
+  )
+]
+
+#notation(
+  name: "Category",
+)[When $cal(C)(X,Y)$ has $X$ and $Y$ unquantified, it notates them implicitly; $forall X,Y in cal(C). cal(C)(X,Y)$. We also notate $cal(C)$ for ${ X | X in cal(C)}$ and $Mor(cal(C))$ for $union_(X,Y in cal(C)) cal(C)(X,Y)$
+]
 
 #definition(name: "Composition is unique")[
   $
@@ -821,11 +826,7 @@
   )
 ]
 
-#proof[
-  $
-    dim(forall cal(C).) Iso(f dim(in cal(C)(X,Y))) => Monic(f) and Epic(f)
-  $
-  Let $f in cal(C)(X,Y)$ be an isomorphism with the inverse $g in cal(C)(Y,X)$. Thus, $f$ is a section to $g$ when $X$ is the retract since $g f = 1_X$. Moreover, $f$ is a retraction to $g$ when $Y$ is the retract since $f g = 1_Y$. Since sections are monic and retractions are epic, $f$ is both monic and epic.
+#proof[Let $f in cal(C)(X,Y)$ be an isomorphism with the inverse $g in cal(C)(Y,X)$. Thus, $f$ is a section to $g$ when $X$ is the retract since $g f = 1_X$. Moreover, $f$ is a retraction to $g$ when $Y$ is the retract since $f g = 1_Y$. Since sections are monic and retractions are epic, $f$ is both monic and epic.
   $
     Iso(f) = & (exists g. g f = 1_X and f g = 1_Y)       &          #ref(<isomorphism>) \
            = & exists g. Section(f, g) and Section(g, f) &              #ref(<section>) \
@@ -839,7 +840,7 @@
   $
 ]
 
-#proof[Let $f$ be an isomorphism with two inverses $g, h$. It must be that $g = h$ since $f$ is monic / epic.
+#proof[Let $f$ be an isomorphism with two inverses $g, h$. It must be that $g = h$ since $f$ is monic or epic.
   $
     Iso(f) => & Monic(f)                                         & #ref(<isomorphisms-are-monic-and-epic>) \
             = & forall a, b. f a = f b => a = b                  &         #ref(<monomorphism>) #<isoinv1> \
@@ -861,7 +862,6 @@
     and & forall f in cal(C)(X,Y), g in cal(C)(Y,Z). F(g f) = F(g) F(f) & text("Composition") #<functor-preserves-composition> \
     and & forall X in cal(C). F(1_X) = 1_(F X) & text("Identity") #<functor-preserves-identity> \
   $
-  We notationally omit the parentheses when applied to objects i.e. $F X = F(X)$ and use $attach(=>, t: F)$ to notate functor arrows in commutative diagrams.
 
   #figure(
     table(
@@ -883,8 +883,84 @@
       }),
     ),
   )
-  Notice how $-^op : cal(C) -> cal(C)^op$ is a functor. Likewise if $C in cal(C)$ then $SliceU(C, -) : cal(C) -> SliceU(C, cal(C))$ and $SliceO(C, -) : cal(C) -> SliceO(C, cal(C))$ are functors too. We just have to show that it preserves composition and identity.
 ] <functor>
+
+#notation(
+  name: "Functor",
+)[The parentheses when applied to objects are omitted i.e. $F X = F(X)$. For commutative diagrams, we may notate $attach(=>, t: F)$ for morphisms that are functors.]
+
+#theorem(name: "Opposite Functor")[
+  $
+    Functor(-^op : cal(C) -> cal(C)^op)
+  $
+]
+
+#proof[Dualizing a category is a functor since it is left total on the objects and morphisms of the underlying category, and that it preserves composition and identity.
+  $
+    & dim(forall cal(C).) cal(C)^op = { X | X in cal(C) } & text("satisfies") #ref(<functor-obj-left-total>) \
+    and & cal(C)^op (X,Y) = { f^op | f in cal(C)(Y,X) } & text("satisfies") #ref(<functor-mor-left-total>) \
+    and & forall g f in cal(C)(X,Z). (g f)^op = f^op g^op & text("satisfies") #ref(<functor-preserves-composition>) \
+    and & dim(forall X in cal(C).) F(1_X) = 1_X^op = 1_X = 1_(F X) & text("satisfies") #ref(<functor-preserves-identity>) \
+    => & Functor(-^op : cal(C) -> cal(C)^op) & #ref(<functor>) \
+  $
+  #figure(
+    grid(
+      align: center + horizon,
+      columns: (auto, auto),
+      table(
+        stroke: 0.5pt,
+        diagram({
+          let X = (0, 1)
+          let Y = (0, 0)
+          let Z = (1, 0)
+          node(X, $X$)
+          node(Y, $Y$)
+          node(Z, $Z$)
+          edge(X, "->", Y)[$f$]
+          edge(Y, "->", Z)[$g$]
+          edge(X, "->", Z, label-side: right)[$g f$]
+        }),
+      ),
+      table(
+        stroke: 0.5pt,
+        diagram({
+          let X = (0, 1)
+          let Y = (0, 0)
+          let Z = (1, 0)
+          node(X, $X$)
+          node(Y, $Y$)
+          node(Z, $Z$)
+          edge(X, "<-", Y)[$f^op$]
+          edge(Y, "<-", Z)[$g^op$]
+          edge(X, "<-", Z, label-side: right)[$(g f)^op = f^op g^op$]
+        }),
+      ),
+    ),
+  )
+]
+
+#theorem(
+  name: "Slice Category Functor",
+)[
+  $
+    Functor(SliceU(-, cal(C)): cal(C) -> Cat) #h(1em)
+    Functor(SliceO(-, cal(C)): cal(C) -> Cat)
+  $
+]
+
+#proof[Fixing some category $cal(C)$, it induces a functor from it to the category of categories. For every object, it maps to the slice category under or over that object. For every morphism in $cal(C)$ there exists a functor between the slice categories under or over the domain and codomain of that morphism $f$ that is semantically the post-composition $f_*$ or pre composition $f^*$ function.
+
+  $
+    &dim(forall cal(C).) forall X in cal(C). SliceU(X, cal(C)) in Cat &text("satisfies") #ref(<functor-obj-left-total>) \
+    and & forall f in cal(C)(X,Y). f_* in Cat(SliceU(X, cal(C)), SliceU(Y, cal(C))) & text("satisfies") #ref(<functor-mor-left-total>) \
+    and & forall g f in cal(C)(X,Z). (g f)_* = g_* f_* & text("satisfies") #ref(<functor-preserves-composition>) \
+    and & dim(forall X in cal(C).) (1_X)_* = 1_(SliceU(X, cal(C))) & text("satisfies") #ref(<functor-preserves-identity>) \
+    => & Functor(SliceU(-, cal(C)): cal(C) -> Cat) & #ref(<functor>)
+  $
+
+  TODO show $f_*$ is a functor, maybe diagram too
+
+]
 
 #definition(
   name: "Forgetful Functor",

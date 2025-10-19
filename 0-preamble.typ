@@ -15,12 +15,34 @@
   rules: thm-rules,
 ) = default-theorems("thm-group", lang: "en")
 
-#let style(it) = {
+#let my-thm-style(
+  thm-type,
+  name,
+  number,
+  body,
+) = showybox(breakable: true, frame: (
+  thickness: 0pt,
+  body-color: blue.lighten(90%),
+))[
+  *#thm-type* #if name == none [] else [_(#name)_] #body
+]
+
+#let my-styling = (
+  thm-styling: my-thm-style,
+)
+
+#let (
+  notation,
+  rules: thm-rules-2,
+) = new-theorems("thm-group", ("notation": [Notation]), ..my-styling)
+
+#let init(it) = {
+  show: thm-rules
+  show: thm-rules-2
   show thm-selector("thm-group", subgroup: "definition"): it => showybox(breakable: true)[#it]
   show thm-selector("thm-group", subgroup: "proof"): it => showybox(breakable: true, frame: (
     thickness: 0pt,
-    title-color: red.lighten(60%),
-    body-color: black.lighten(90%)
+    body-color: black.lighten(90%),
   ))[#it]
   it
 }

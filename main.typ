@@ -16,7 +16,7 @@
 
 // end of preamble -------------------------
 
-#include "1-pre-req.typ"
+#include "1-categories.typ"
 #include "2-yoneda.typ"
 
 #bibliography("bibliography.bib")

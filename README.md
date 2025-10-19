@@ -1,14 +1,6 @@
-# Morphism Meetups Notes
+# Notes on Abstract Categories
 
-Reading group working towards understanding higher category theory.
-
-https://discord.gg/ezddt97f
-
-## Meetings
-
-- 10/10/2025: Universal Properties and Yoneda Lemma (Riehl, Chapter 2) presented by @Vibbz
-
-# Developer Guide
+Tagged commits will be compiled into a PDF and published on the releases page. For nightly version do the following:
 
 1. Install [Typst](https://typst.app/)
 2. Clone this repository

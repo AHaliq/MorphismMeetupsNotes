@@ -37,6 +37,8 @@
 ) = new-theorems("thm-group", ("notation": [Notation]), ..my-styling)
 
 #let init(it) = {
+  set table(stroke: 0.5pt + gray, align: center + horizon)
+  set grid(align: center + horizon, gutter: 1em)
   show: thm-rules
   show: thm-rules-2
   show thm-selector("thm-group", subgroup: "definition"): it => showybox(breakable: true)[#it]

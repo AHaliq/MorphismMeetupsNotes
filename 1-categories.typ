@@ -11,7 +11,6 @@
 
 // lemmify ---------------------------------
 
-
 #let dim(x) = text(fill: gray, $#x$)
 
 // end of preamble -------------------------
@@ -40,7 +39,6 @@
       align: horizon + center,
       columns: (auto, auto, auto, auto),
       row-gutter: (2pt, auto),
-      stroke: 0.5pt,
       inset: 7pt,
       [identity], [composition], [unital], [associative],
       diagram({
@@ -99,10 +97,8 @@
 )[We notate morphisms differently depending on context. Hom notation makes the category explicit. Type theoretic notation when the underlying category is clear. Algebra notation for proof writing. The rest for brevity and visual clarity.
   #figure(
     table(
-      align: center + horizon,
       columns: (auto, auto, auto, auto),
       row-gutter: (2pt, auto),
-      stroke: 0.5pt,
       inset: 7pt,
       [hom], [type], [diagram], [algebra],
       $f in cal(C)(X,Y)$, $f: X -> Y$, $X attach(->, t: f) Y$, $dom(f) = X, cod(f) = Y$,
@@ -126,21 +122,21 @@
   $
     dim(forall X.) exists! 1_X dim(in cal(C)(X,X).).forall f dim(in cal(C)(X,Y).) 1_Y f = f = f 1_X
   $
-] <identity-unique>
+]
 
 #proof[
   Assuming there are two identity morphisms $1_X$ and $1'_X$ for every object $X$, then for any morphism $f: X -> Y$ by the unital property we know that $1_Y f = f = f 1_X$ and $1'_Y f' = f' = f' 1'_X$. If we let $f' = 1_X$ and $f = 1'_X$ we can see that $1_X 1'_X = 1'_X = 1'_X 1_X = 1_X = 1_X 1'_X$ which quotients $1_X = 1'_X$ making the identity unique.
   $
-        & forall f dim(in cal(C)(X,Y)). 1_Y f = f = f 1_X          &                     #ref(<unital>) \
-     => & dim(forall X in cal(C).) 1'_X dim(in cal(C)(X,X))        &                text("premise; id") \
-    and & forall f' dim(in cal(C)(X,Y)). 1'_Y f' = f' = f' 1'_X    & text("premise; unital") #<iduniq1> \
-     => & dim(forall X in cal(C).) (1_X 1'_X = 1'_X = 1'_X 1_X     &               text("Let") f = 1'_X \
-    and & 1'_X 1_X = 1_X = 1_X 1'_X)                               &               text("Let") f' = 1_X \
-     => & dim(forall X in cal(C).) 1_X = 1'_X                      &                text("transitive")= \
-     => & dim(forall X in cal(C).) exists! 1_X dim(in cal(C)(X,X)) &              text("intro") exists! \
-      . & forall f. 1_Y f = f = f 1_X                              &                    #ref(<iduniq1>)
+        & forall f dim(in cal(C)(X,Y)). 1_Y f = f = f 1_X          &                               #ref(<unital>) \
+     => & dim(forall X in cal(C).) 1'_X dim(in cal(C)(X,X))        &                          text("premise; id") \
+    and & forall f' dim(in cal(C)(X,Y)). 1'_Y f' = f' = f' 1'_X    & text("premise; unital") #<identity-unique-1> \
+     => & dim(forall X in cal(C).) (1_X 1'_X = 1'_X = 1'_X 1_X     &                         text("Let") f = 1'_X \
+    and & 1'_X 1_X = 1_X = 1_X 1'_X)                               &                         text("Let") f' = 1_X \
+     => & dim(forall X in cal(C).) 1_X = 1'_X                      &                          text("transitive")= \
+     => & dim(forall X in cal(C).) exists! 1_X dim(in cal(C)(X,X)) &                        text("intro") exists! \
+      . & forall f. 1_Y f = f = f 1_X                              &                    #ref(<identity-unique-1>)
   $
-]
+] <identity-unique>
 
 #let Set = $text("Set")$;
 
@@ -196,7 +192,6 @@
 
   #figure(
     table(
-      stroke: 0.5pt,
       diagram({
         let X = (0, 0)
         let Y = (1, 0)
@@ -220,7 +215,6 @@
 
   #figure(
     table(
-      stroke: 0.5pt,
       diagram({
         let X = (0, 0)
         node(X, $X$)
@@ -240,7 +234,6 @@
 
   #figure(
     table(
-      stroke: 0.5pt,
       diagram({
         let X = (0, 0)
         node(X, $X$)
@@ -275,9 +268,7 @@
   $
   #figure(
     table(
-      align: center + horizon,
       columns: (auto, auto),
-      stroke: 0.5pt,
       diagram({
         let X = (0, 0)
         let Y = (1, 0)
@@ -317,19 +308,14 @@
   #smallcaps[$SliceU(C, cal(C))$ slice category of $cal(C)$ under $C$:]
   #figure(
     grid(
-      align: center + horizon,
       columns: (auto, auto),
-      gutter: 1em,
       $
             & dim(C in cal(C) =>) SliceU(C, cal(C)) = limits(union)_(X in cal(C)) cal(C)(C,X) \
         and & forall f dim(in SliceU(C, cal(C))). 1_f dim(in SliceU(C, cal(C))(f,f)) = 1_(cod(f)) \
         and & SliceU(C, cal(C))(f dim(in cal(C)(C,X)),g dim(in cal(C)(C,Y))) = { h | h f = g }
       $,
       table(
-        align: center + horizon,
         columns: (auto, auto),
-        stroke: 0.5pt,
-        $cal(C)$, $SliceU(C, cal(C))$,
         diagram({
           let C = (0, 0)
           let X = (1, 0)
@@ -356,19 +342,14 @@
 
   #figure(
     grid(
-      align: center + horizon,
       columns: (auto, auto),
-      gutter: 1em,
       $
             & dim(C in cal(C) =>) SliceO(C, cal(C))(C) = limits(union)_(X in cal(C)) cal(C)(X,C) \
         and & forall f dim(in SliceU(C, cal(C))). 1_f dim(in SliceU(C, cal(C))(f,f)) = 1_(dom(f)) \
         and & SliceO(C, cal(C))(f dim(in cal(C)(X,C)),g dim(in cal(C)(Y,C))) = { h | g h = f}
       $,
       table(
-        align: center + horizon,
         columns: (auto, auto),
-        stroke: 0.5pt,
-        $cal(C)$, $SliceO(C, cal(C))$,
         diagram({
           let C = (0, 0)
           let X = (1, 0)
@@ -403,7 +384,6 @@
 
   #figure(
     table(
-      stroke: 0.5pt,
       diagram({
         let C = (2, 0)
         let X2 = (0, 1)
@@ -453,7 +433,6 @@
 
   #figure(
     table(
-      stroke: 0.5pt,
       diagram({
         let C = (2, 0)
         let X2 = (0, 1)
@@ -519,9 +498,7 @@
   $
   #figure(
     table(
-      align: center + horizon,
       columns: (auto, auto),
-      stroke: 0.5pt,
       diagram({
         let C = (0, 0)
         let X = (1, 0)
@@ -561,9 +538,7 @@
   $
   #figure(
     table(
-      align: center + horizon,
       columns: (auto, auto),
-      stroke: 0.5pt,
       diagram({
         let C = (0, 0)
         let X = (1, 0)
@@ -614,7 +589,6 @@
 
   #figure(
     table(
-      stroke: 0.5pt,
       diagram({
         let X = (1, 0)
         let Y = (2, 0)
@@ -659,7 +633,6 @@
 
   #figure(
     table(
-      stroke: 0.5pt,
       diagram({
         let X = (1, 0)
         let Y = (2, 0)
@@ -713,7 +686,6 @@
 
   #figure(
     table(
-      stroke: 0.5pt,
       diagram({
         let X = (0, 0)
         let Y = (1, 0)
@@ -735,7 +707,6 @@
   $
   #figure(
     table(
-      stroke: 0.5pt,
       diagram({
         let X = (1, 0)
         let Y = (2, 0)
@@ -767,13 +738,13 @@
   $
   Let $s in cal(C)(X,Y)$ be a section to $r in cal(C)(Y,X)$ such that $r s = 1_X$. We show that $s$ is monic. Suppose that $s h = s k$ we show that $h = k$. Composing with $r$ we get that $r s h = r s k$ and so $1_X h = 1_X k$. By the unital property of identity morphisms, $1_X h = h$ and likewise $1_X k = k$. Thus, $h = k$ concluding that $s$ is monic.
   $
-    Section(s, r) = & (r s = 1_X)                             & #ref(<section>) #<secmonic> \
-                 => & forall h, k. s h = s k                  &             text("premise") \
-                  = & forall h, k. s h = s k => s h = s k     &       text("idempotent") => \
-                  = & forall h, k. s h = s k => r s h = r s k &         #ref(<composition>) \
-                  = & forall h, k. s h = s k => 1_X h = 1_X k &            #ref(<secmonic>) \
-                  = & forall h, k. s h = s k => h = k         &              #ref(<unital>) \
-                  = & Monic(s)                                &        #ref(<monomorphism>)
+    Section(s, r) = & (r s = 1_X)                             & #ref(<section>) #<sections-are-monic-1> \
+                 => & forall h, k. s h = s k                  &                         text("premise") \
+                  = & forall h, k. s h = s k => s h = s k     &                   text("idempotent") => \
+                  = & forall h, k. s h = s k => r s h = r s k &                     #ref(<composition>) \
+                  = & forall h, k. s h = s k => 1_X h = 1_X k &            #ref(<sections-are-monic-1>) \
+                  = & forall h, k. s h = s k => h = k         &                          #ref(<unital>) \
+                  = & Monic(s)                                &                    #ref(<monomorphism>)
   $
 ] <sections-are-monic>
 
@@ -785,13 +756,13 @@
   $
   Let $r in cal(C)(Y,X)$ be a retraction to $s in cal(C)(X,Y)$ such that $r s = 1_X$. We show that $r$ is epic. Suppose that $i r = j r$ we show that $i = j$. Pre-composing with $s$ we get that $i r s = j r s$ and so $i 1_X = j 1_X$. By the unital property of identity morphisms, $i 1_X = i$ and likewise $j 1_X = j$. Thus, $i = j$ concluding $r$ is epic.
   $
-    Section(s, r) = & (r s = 1_X)                            & #ref(<section>) #<retepic1> \
-                 => & forall i, j. i r = j r                 &             text("premise") \
-                  = & forall i,j. i r = j r => i r = j r     &       text("idempotent") => \
-                  = & forall i,j. i r = j r => i r s = j r s &         #ref(<composition>) \
-                  = & forall i,j. i r = j r => i 1_X = j 1_X &            #ref(<retepic1>) \
-                  = & forall i,j. i r = j r => i = j         &              #ref(<unital>) \
-                  = & Epic(r)                                &         #ref(<epimorphism>)
+    Section(s, r) = & (r s = 1_X)                            & #ref(<section>) #<retractions-are-epic-1> \
+                 => & forall i, j. i r = j r                 &                           text("premise") \
+                  = & forall i,j. i r = j r => i r = j r     &                     text("idempotent") => \
+                  = & forall i,j. i r = j r => i r s = j r s &                       #ref(<composition>) \
+                  = & forall i,j. i r = j r => i 1_X = j 1_X &            #ref(<retractions-are-epic-1>) \
+                  = & forall i,j. i r = j r => i = j         &                            #ref(<unital>) \
+                  = & Epic(r)                                &                       #ref(<epimorphism>)
   $
 ] <retractions-are-epic>
 
@@ -801,7 +772,6 @@
   $
   #figure(
     table(
-      stroke: 0.5pt,
       diagram({
         let X = (1, 0)
         let Y = (2, 0)
@@ -843,10 +813,10 @@
 #proof[Let $f$ be an isomorphism with two inverses $g, h$. It must be that $g = h$ since $f$ is monic or epic.
   $
     Iso(f) => & Monic(f)                                         & #ref(<isomorphisms-are-monic-and-epic>) \
-            = & forall a, b. f a = f b => a = b                  &         #ref(<monomorphism>) #<isoinv1> \
+            = & forall a, b. f a = f b => a = b                  &         #ref(<monomorphism>) #<iso-inv-unique-1> \
            => & exists g. g f = 1_X and f g = 1_Y                &                     #ref(<isomorphism>) \
             = & exists g, h. g f = h f = 1_X and f g = f h = 1_Y &                         text("premise") \
-           => & exists g, h. f g = f h => g = h                  &                         #ref(<isoinv1>) \
+           => & exists g, h. f g = f h => g = h                  &                         #ref(<iso-inv-unique-1>) \
            => & exists! g. g f = 1_X and f g = 1_Y               &                   text("intro") exists!
   $
 ] <iso-inv-unique>
@@ -865,7 +835,6 @@
 
   #figure(
     table(
-      stroke: 0.5pt,
       diagram({
         let X = (0, 0)
         let Y = (0, 1)
@@ -905,10 +874,8 @@
   $
   #figure(
     grid(
-      align: center + horizon,
       columns: (auto, auto),
       table(
-        stroke: 0.5pt,
         diagram({
           let X = (0, 1)
           let Y = (0, 0)
@@ -922,7 +889,6 @@
         }),
       ),
       table(
-        stroke: 0.5pt,
         diagram({
           let X = (0, 1)
           let Y = (0, 0)
@@ -995,7 +961,6 @@
 
   #figure(
     table(
-      stroke: 0.5pt,
       diagram({
         let C = (-1, 1)
         let X = (0, 0)

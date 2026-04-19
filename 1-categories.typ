@@ -978,6 +978,66 @@
   $
 ]
 
+#definition(name: "Product Category")[
+  For any two categories $cal(C)$ and $cal(D)$ there exists a category $cal(C) times cal(D)$ where its objects and morphisms are pairs of objects and respectively morphisms of the underlying categories.
+  $
+    dim(forall cal(C)\, cal(D)\.) cal(C) times cal(D) = { (X, Y) | X in cal(C) and Y in cal(D) } \
+    forall (X,Y) in dim(cal(C) times cal(D)). 1_(X,Y) in cal(C) times cal(D) ((X,Y),(X,Y))) \
+    forall f in dim(cal(C)(X,Y)), g in dim(cal(D)(X',Y')). (f,g) in cal(C) times cal(D) ((X,X'), (Y,Y'))
+  $
+
+  #figure(
+    table(
+      columns: (auto, auto, auto),
+      $cal(C)$, $cal(D)$, $cal(C) times cal(D)$,
+      diagram({
+        let X = (0, 0)
+        let Y = (0, 1)
+        node(X, $X$)
+        node(Y, $Y$)
+        edge(X, "->", Y)[$f$]
+      }),
+      diagram({
+        let X2 = (0, 0)
+        let Y2 = (0, 1)
+        node(X2, $X'$)
+        node(Y2, $Y'$)
+        edge(X2, "->", Y2)[$g$]
+      }),
+      diagram({
+        let XX = (0, 0)
+        let YY = (0, 1)
+        node(XX, $(X,X')$)
+        node(YY, $(Y,Y')$)
+        edge(XX, "->", YY)[$(f,g)$]
+      }),
+    ),
+  )
+]
+
+#proof[$cal(C) times cal(D)$ is a category because for every object $(X,X')$ where $X in cal(C)$ and $X'$ in $cal(D)$, the identity $1_(X,X') = (1_X, 1_X')$. Composition holds since composition holds elementwise.
+
+  $
+    Category(cal(C) times cal(D)) =&
+    dim(forall X in cal(C)\, Y in cal(D).) \ &forall (X,Y) in dim(cal(C) times cal(D)). 1_((X,Y)) in cal(C) times cal(D) ((X,Y),(X,Y))) #<product-identity> \
+    and& dim(forall f in cal(C)(X,Y)\, g in cal(C)(Y,Z)\, f' in cal(D)(X',Y')\, g' in cal(D)(Y',Z').) \
+    &forall (g,g') in cal(C) times cal(D)((Y,Y'),(Z,Z')), \
+    &(f,f') in cal(C) times cal(D)((X,X'),(Y,Y')). \
+    &(g,g') (f,f') = (g f, g' f') in dim(cal(C) times cal(D) ((X,X'), (Z,Z'))) #<product-composition>\
+    and& forall (f,g) in cal(C) times cal(D)((X,X'),(Y,Y')). \
+    &(f,f') 1_((X,X')) = (f,f')(1_X,1_X') = (f 1_X, f' 1_X') = (f,f') and \
+    &1_((Y,Y')) (f,f') = (1_Y, 1_Y') (f,f') = (1_Y f, 1_Y' f') = (f,f') #<product-unital> \
+    and& forall (f,f') dim(in cal(C) times cal(D)((X,X'),(Y,Y'))), \
+    & (g, g') dim(in cal(C) times cal(D)((Y,Y'),(Z,Z'))), \
+    &(h,h') dim(in cal(C) times cal(D)((Z,Z'),(W,W'))). \
+    &(h,h') ((g,g') (f,f')) = ((h,h') (g,g')) (f,f') #<product-associative> 
+  $
+]
+
+#definition(name: "Bifunctor")[
+  
+]
+
 #summary[
 
   TODO
@@ -989,7 +1049,6 @@
   definition dependency graph
 ]
 
-- product category
 - bifunctor
 - data of covariant and contravariant as bifunctor
 - isomorphism of categories
